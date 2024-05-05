@@ -1,0 +1,265 @@
+
+
+
+{
+  "type": "page",
+  "name": "cms-subscription",
+  "body": [
+    {
+      "type": "crud",
+      "name": "cms_subscription",
+      "api": {
+        "method": "post",
+        "url": "${API_BASEURL}/admin/cms/subscription/query",
+        "data": {
+          "order_fields": [
+            {
+              "field": "${orderBy}",
+              "order_type": "${orderDir}"
+            }
+          ],
+          "conditions": [
+            {
+              "disable": "${!id}",
+              "op": "and",
+              "field": "id",
+              "condition_type": "eq",
+              "vals": [
+                "id"
+              ]
+            },
+            {
+              "disable": "${!status || status == ''}",
+              "op": "and",
+              "field": "status",
+              "condition_type": "eq",
+              "vals": [
+                "${status}"
+              ]
+            }
+          ],
+          "page": {
+            "offset": "${(page - 1) * perPage}",
+            "limit": "${perPage}",
+            "query_count": true
+          }
+        }
+      },
+      "filter": {
+        "title": "搜索",
+        "body": [
+          {
+            "type": "group",
+            "body": [
+              {
+                "label": "ID",
+                "type": "input-text",
+                "size": "sm",
+                "name": "id",
+                "clearable": true,
+                "placeholder": "ID搜索"
+              },
+              {
+                "label": "状态",
+                "type": "select",
+                "size": "sm",
+                "name": "status",
+                "source": "${options['cms_subscription.status']}"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "button",
+            "actionType": "drawer",
+            "icon": "fa fa-plus",
+            "label": "新增",
+            "drawer": {
+              "title": "新增数据",
+              "size": "xl",
+              "body": {
+                "type": "form",
+                "name": "add-form",
+                "api": "POST:${API_BASEURL}/admin/cms/subscription/add",
+                "body": [
+                  
+                  
+                  {
+                    "label": "用户ID",
+                    "type": "input-text",
+                    "name": "uid"
+                  },
+                  
+                  {
+                    "label": "主题",
+                    "type": "input-text",
+                    "name": "topic"
+                  }
+                  
+                ]
+              }
+            }
+          },
+          {
+            "type": "reset",
+            "label": "重置"
+          },
+          {
+            "type": "submit",
+            "level": "primary",
+            "label": "查询"
+          }
+        ]
+      },
+      "bulkActions": [
+        {
+          "label": "批量删除",
+          "type": "button",
+          "level": "danger",
+          "actionType": "ajax",
+          "api": {
+            "method": "DELETE",
+            "url": "${API_BASEURL}/admin/cms/subscription/del",
+            "data": {
+              "ids": "${ids}"
+            }
+          },
+          "confirmText": "确定要批量删除?"
+        }
+      ],
+      "quickSaveApi": {
+        "method": "PATCH",
+        "url": "${API_BASEURL}/admin/cms/subscription/batch-update",
+        "data": {
+          "rows": "${rowsDiff}"
+        }
+      },
+      "footerToolbar": [
+        "statistics",
+        "switch-per-page",
+        "pagination"
+      ],
+      "columns": [
+        
+        {
+          "label": "-",
+          "name": "id"
+        },
+        
+        {
+          "label": "用户ID",
+          "name": "uid"
+        },
+        
+        {
+          "label": "主题",
+          "name": "topic"
+        },
+        
+        {
+          "type": "operation",
+          "label": "操作",
+          "buttons": [
+            {
+              "type": "button",
+              "icon": "fa fa-eye",
+              "actionType": "drawer",
+              "tooltip": "查看",
+              "drawer": {
+                "title": "查看信息",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    
+                    {
+                      "label": "-",
+                      "type": "static",
+                      "name": "id"
+                    },
+                    
+                    {
+                      "label": "用户ID",
+                      "type": "static",
+                      "name": "uid"
+                    },
+                    
+                    {
+                      "label": "主题",
+                      "type": "static",
+                      "name": "topic"
+                    }
+                    
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-pencil",
+              "tooltip": "编辑",
+              "actionType": "drawer",
+              "drawer": {
+                "title": "修改记录",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "api": {
+                    "method": "PUT",
+                    "url": "${API_BASEURL}/admin/cms/subscription/update",
+                    "data": {
+                        "id": "${id}",
+                        "uid": "${uid}",
+                        "topic": "${topic}"
+                      
+                    },
+                    "messages": {
+                      "success": "修改成功"
+                    }
+                  },
+                  "body": [
+                    
+                    
+                    {
+                      "label": "用户ID",
+                      "type": "input-text",
+                      "name": "uid"
+                    },
+                    
+                    {
+                      "label": "主题",
+                      "type": "input-text",
+                      "name": "topic"
+                    }
+                    
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-times text-danger",
+              "actionType": "ajax",
+              "tooltip": "删除",
+              "confirmText": "您确认要删除[${id}]?",
+              "api": {
+                "method": "post",
+                "url": "${API_BASEURL}/admin/cms/subscription/del",
+                "data": {
+                  "ids": "${id}"
+                }
+              }
+            }
+          ],
+          "toggled": true
+        }
+      ],
+      "affixHeader": true,
+      "columnsTogglable": "auto",
+      "placeholder": "暂无数据",
+      "combineNum": 0,
+      "bodyClassName": "panel-default"
+    }
+  ]
+}

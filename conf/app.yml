@@ -1,0 +1,22 @@
+server:
+  http:
+    server-name: "lucky"
+    listen: ":8080"
+    cors:
+      allow-origins:
+        - "http://localhost:3000"
+        - "http://localhost:3001"
+        - "http://localhost:8000"
+        - "http://127.0.0.1:3000"
+        - "http://127.0.0.1:3000"
+        - "http://admin.luchen.fun"
+auth:
+  version: 1
+  secret: G7UtU3LLGC0xrPJSHO32bCh6z7XXV6jC
+db:
+  default:
+    type: mysql
+    dsn: root:1234@tcp(localhost:3306)/lca?charset=utf8mb4,utf8&tls=false&timeout=10s&parseTime=true
+    show-sql: true
+    max-idle: 5
+    max-conn: 10

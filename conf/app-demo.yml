@@ -1,0 +1,15 @@
+server:
+  http:
+    cors:
+      allow-origins:
+        - "http://admin.luchen.fun"
+auth:
+  version: 1
+  secret: DfY5YlgJEHRRYULJDyYQyX9zx4Ex0luQ
+db:
+  default:
+    type: mysql
+    dsn: app:oxCrq3td5uq5pWw1@tcp(localhost:3306)/lca?charset=utf8mb4,utf8&tls=false&timeout=10s&parseTime=true
+    show-sql: true
+    max-idle: 5
+    max-conn: 10

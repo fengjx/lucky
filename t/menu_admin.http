@@ -1,0 +1,4 @@
+
+GET {{BaseURL}}/admin/sys/menu/fetch
+Content-Type: application/json
+X-Admin-UID: {{AdminUID}}

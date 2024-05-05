@@ -1,0 +1,377 @@
+{
+  "type": "page",
+  "name": "sys-dict",
+  "body": [
+    {
+      "type": "crud",
+      "name": "sys_dict",
+      "api": {
+        "method": "post",
+        "url": "${API_BASEURL}/admin/sys/dict/query",
+        "data": {
+          "order_fields": [
+            {
+              "field": "${orderBy}",
+              "order_type": "${orderDir}"
+            }
+          ],
+          "conditions": [
+            {
+              "disable": "${!group}",
+              "op": "and",
+              "field": "group",
+              "condition_type": "like",
+              "vals": [
+                "%${group}%"
+              ]
+            },
+            {
+              "disable": "${!value}",
+              "op": "and",
+              "field": "value",
+              "condition_type": "like",
+              "vals": [
+                "%${value}%"
+              ]
+            },
+            {
+              "disable": "${!status || status == ''}",
+              "op": "and",
+              "field": "status",
+              "condition_type": "eq",
+              "vals": [
+                "${status}"
+              ]
+            }
+          ],
+          "page": {
+            "offset": "${(page - 1) * perPage}",
+            "limit": "${perPage}",
+            "query_count": true
+          }
+        }
+      },
+      "filter": {
+        "title": "搜索",
+        "body": [
+          {
+            "type": "group",
+            "body": [
+              {
+                "label": "分组",
+                "type": "input-text",
+                "name": "group",
+                "clearable": true,
+                "placeholder": "分组搜索"
+              },
+              {
+                "label": "数据值",
+                "type": "input-text",
+                "name": "value",
+                "clearable": true,
+                "placeholder": "数据值搜索"
+              },
+              {
+                "label": "状态",
+                "type": "select",
+                "name": "status",
+                "clearable": true,
+                "source": "${options['sys_dict.status']}"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "button",
+            "actionType": "drawer",
+            "icon": "fa fa-plus",
+            "label": "新增",
+            "drawer": {
+              "title": "新增用户",
+              "size": "xl",
+              "body": {
+                "type": "form",
+                "name": "add-form",
+                "api": "POST:${API_BASEURL}/admin/sys/dict/add",
+                "body": [
+                  {
+                    "label": "分组",
+                    "type": "input-text",
+                    "name": "group",
+                    "required": true
+                  },
+                  {
+                    "label": "分组名称",
+                    "type": "input-text",
+                    "name": "group_name",
+                    "required": true
+                  },
+                  {
+                    "label": "数据值",
+                    "type": "input-text",
+                    "name": "value",
+                    "required": true
+                  },
+                  {
+                    "label": "显示标签",
+                    "type": "input-text",
+                    "name": "label",
+                    "required": true
+                  },
+                  {
+                    "label": "数据状态",
+                    "type": "select",
+                    "name": "status",
+                    "source": "${options['sys_dict.status']}"
+                  },
+                  {
+                    "label": "备注",
+                    "type": "input-text",
+                    "name": "remark"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "reset",
+            "label": "重置"
+          },
+          {
+            "type": "submit",
+            "level": "primary",
+            "label": "查询"
+          }
+        ]
+      },
+      "bulkActions": [
+        {
+          "label": "批量删除",
+          "type": "button",
+          "level": "danger",
+          "actionType": "ajax",
+          "api": {
+            "method": "DELETE",
+            "url": "${API_BASEURL}/admin/sys/dict/del",
+            "data": {
+              "ids": "${ids}"
+            }
+          },
+          "confirmText": "确定要批量删除?"
+        }
+      ],
+      "quickSaveApi": {
+        "method": "PATCH",
+        "url": "${API_BASEURL}/admin/sys/dict/batch-update",
+        "data": {
+          "rows": "${rowsDiff}"
+        }
+      },
+      "footerToolbar": [
+        "statistics",
+        "switch-per-page",
+        "pagination"
+      ],
+      "columns": [
+        {
+          "label": "ID",
+          "name": "id"
+        },
+        {
+          "label": "分组",
+          "name": "group"
+        },
+        {
+          "label": "分组名称",
+          "name": "group_name"
+        },
+        {
+          "label": "数据值",
+          "name": "value"
+        },
+        {
+          "label": "显示标签",
+          "name": "label"
+        },
+        {
+          "label": "备注",
+          "name": "remark"
+        },
+        {
+          "label": "更新时间",
+          "name": "utime",
+          "sortable": true,
+          "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+        },
+        {
+          "label": "创建时间",
+          "name": "ctime",
+          "sortable": true,
+          "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+        },
+        {
+          "label": "数据状态",
+          "name": "status",
+          "width": 150,
+          "quickEdit": {
+            "mode": "inline",
+            "type": "select",
+            "source": "${options['sys_dict.status']}"
+          }
+        },
+        {
+          "label": "操作",
+          "type": "operation",
+          "width": 150,
+          "buttons": [
+            {
+              "type": "button",
+              "icon": "fa fa-eye",
+              "actionType": "drawer",
+              "tooltip": "查看",
+              "drawer": {
+                "title": "查看信息",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    {
+                      "label": "ID",
+                      "type": "static",
+                      "name": "id"
+                    },
+                    {
+                      "label": "分组",
+                      "type": "static",
+                      "name": "group"
+                    },
+                    {
+                      "label": "分组名称",
+                      "type": "static",
+                      "name": "group_name"
+                    },
+                    {
+                      "label": "数据值",
+                      "type": "static",
+                      "name": "value"
+                    },
+                    {
+                      "label": "显示标签",
+                      "type": "static",
+                      "name": "label"
+                    },
+                    {
+                      "label": "数据状态",
+                      "type": "static",
+                      "name": "status",
+                      "tpl": "${getDictLabel(status)}"
+                    },
+                    {
+                      "label": "备注",
+                      "type": "static",
+                      "name": "remark"
+                    },
+                    {
+                      "label": "更新时间",
+                      "type": "static",
+                      "name": "utime",
+                      "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+                    },
+                    {
+                      "label": "创建时间",
+                      "type": "static",
+                      "name": "ctime",
+                      "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-pencil",
+              "tooltip": "编辑",
+              "actionType": "drawer",
+              "drawer": {
+                "title": "修改记录",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "api": {
+                    "method": "PUT",
+                    "url": "${API_BASEURL}/admin/sys/dict/update",
+                    "data": {
+                      "id": "${id}",
+                      "group": "${group}",
+                      "group_name": "${group_name}",
+                      "value": "${value}",
+                      "label": "${label}",
+                      "status": "${status}",
+                      "remark": "${remark}"
+                    },
+                    "messages": {
+                      "success": "修改成功"
+                    }
+                  },
+                  "body": [
+                    {
+                      "label": "分组",
+                      "type": "input-text",
+                      "name": "group"
+                    },
+                    {
+                      "label": "分组名称",
+                      "type": "input-text",
+                      "name": "group_name"
+                    },
+                    {
+                      "label": "数据值",
+                      "type": "input-text",
+                      "name": "value"
+                    },
+                    {
+                      "label": "显示标签",
+                      "type": "input-text",
+                      "name": "label"
+                    },
+                    {
+                      "label": "数据状态",
+                      "type": "input-text",
+                      "name": "status"
+                    },
+                    {
+                      "label": "备注",
+                      "type": "input-text",
+                      "name": "remark"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-times text-danger",
+              "actionType": "ajax",
+              "tooltip": "删除",
+              "confirmText": "您确认要删除[${id}]?",
+              "api": {
+                "method": "post",
+                "url": "${API_BASEURL}/admin/sys/dict/del",
+                "data": {
+                  "ids": "${id}"
+                }
+              }
+            }
+          ],
+          "toggled": true
+        }
+      ],
+      "affixHeader": true,
+      "columnsTogglable": "auto",
+      "placeholder": "暂无数据",
+      "combineNum": 0,
+      "bodyClassName": "panel-default"
+    }
+  ]
+}

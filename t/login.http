@@ -1,0 +1,18 @@
+
+### 用户登录
+POST {{BaseURL}}/api/open/sys/login
+Content-Type: application/json
+
+{
+  "username": "fengjx",
+  "password": "1024"
+}
+
+> {% client.global.set("access_token", response.body.data.token); %}
+
+
+### 登录用户信息
+GET {{BaseURL}}/admin/sys/user/info
+Content-Type: application/json
+X-Admin-Token: {{access_token}}
+

@@ -1,0 +1,457 @@
+
+
+
+{
+  "type": "page",
+  "name": "cms-user",
+  "body": [
+    {
+      "type": "crud",
+      "name": "cms_user",
+      "api": {
+        "method": "post",
+        "url": "${API_BASEURL}/admin/cms/user/query",
+        "data": {
+          "order_fields": [
+            {
+              "field": "${orderBy}",
+              "order_type": "${orderDir}"
+            }
+          ],
+          "conditions": [
+            {
+              "disable": "${!id}",
+              "op": "and",
+              "field": "id",
+              "condition_type": "eq",
+              "vals": [
+                "id"
+              ]
+            },
+            {
+              "disable": "${!status || status == ''}",
+              "op": "and",
+              "field": "status",
+              "condition_type": "eq",
+              "vals": [
+                "${status}"
+              ]
+            }
+          ],
+          "page": {
+            "offset": "${(page - 1) * perPage}",
+            "limit": "${perPage}",
+            "query_count": true
+          }
+        }
+      },
+      "filter": {
+        "title": "搜索",
+        "body": [
+          {
+            "type": "group",
+            "body": [
+              {
+                "label": "ID",
+                "type": "input-text",
+                "size": "sm",
+                "name": "id",
+                "clearable": true,
+                "placeholder": "ID搜索"
+              },
+              {
+                "label": "状态",
+                "type": "select",
+                "size": "sm",
+                "name": "status",
+                "source": "${options['cms_user.status']}"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "button",
+            "actionType": "drawer",
+            "icon": "fa fa-plus",
+            "label": "新增",
+            "drawer": {
+              "title": "新增数据",
+              "size": "xl",
+              "body": {
+                "type": "form",
+                "name": "add-form",
+                "api": "POST:${API_BASEURL}/admin/cms/user/add",
+                "body": [
+                  
+                  
+                  {
+                    "label": "用户名",
+                    "type": "input-text",
+                    "name": "username"
+                  },
+                  
+                  {
+                    "label": "密码",
+                    "type": "input-text",
+                    "name": "pwd"
+                  },
+                  
+                  {
+                    "label": "密码盐",
+                    "type": "input-text",
+                    "name": "salt"
+                  },
+                  
+                  {
+                    "label": "邮箱",
+                    "type": "input-text",
+                    "name": "email"
+                  },
+                  
+                  {
+                    "label": "昵称",
+                    "type": "input-text",
+                    "name": "nickname"
+                  },
+                  
+                  {
+                    "label": "头像",
+                    "type": "input-text",
+                    "name": "avatar"
+                  },
+                  
+                  {
+                    "label": "状态",
+                    "type": "input-text",
+                    "name": "status"
+                  },
+                  
+                  {
+                    "label": "备注",
+                    "type": "input-text",
+                    "name": "remark"
+                  },
+                  
+                  {
+                    "label": "更新时间",
+                    "type": "input-text",
+                    "name": "utime"
+                  },
+                  
+                  {
+                    "label": "创建时间",
+                    "type": "input-text",
+                    "name": "ctime"
+                  }
+                  
+                ]
+              }
+            }
+          },
+          {
+            "type": "reset",
+            "label": "重置"
+          },
+          {
+            "type": "submit",
+            "level": "primary",
+            "label": "查询"
+          }
+        ]
+      },
+      "bulkActions": [
+        {
+          "label": "批量删除",
+          "type": "button",
+          "level": "danger",
+          "actionType": "ajax",
+          "api": {
+            "method": "DELETE",
+            "url": "${API_BASEURL}/admin/cms/user/del",
+            "data": {
+              "ids": "${ids}"
+            }
+          },
+          "confirmText": "确定要批量删除?"
+        }
+      ],
+      "quickSaveApi": {
+        "method": "PATCH",
+        "url": "${API_BASEURL}/admin/cms/user/batch-update",
+        "data": {
+          "rows": "${rowsDiff}"
+        }
+      },
+      "footerToolbar": [
+        "statistics",
+        "switch-per-page",
+        "pagination"
+      ],
+      "columns": [
+        
+        {
+          "label": "-",
+          "name": "id"
+        },
+        
+        {
+          "label": "用户名",
+          "name": "username"
+        },
+        
+        {
+          "label": "密码",
+          "name": "pwd"
+        },
+        
+        {
+          "label": "密码盐",
+          "name": "salt"
+        },
+        
+        {
+          "label": "邮箱",
+          "name": "email"
+        },
+        
+        {
+          "label": "昵称",
+          "name": "nickname"
+        },
+        
+        {
+          "label": "头像",
+          "name": "avatar"
+        },
+        
+        {
+          "label": "状态",
+          "name": "status"
+        },
+        
+        {
+          "label": "备注",
+          "name": "remark"
+        },
+        
+        {
+          "label": "更新时间",
+          "name": "utime"
+        },
+        
+        {
+          "label": "创建时间",
+          "name": "ctime"
+        },
+        
+        {
+          "type": "operation",
+          "label": "操作",
+          "buttons": [
+            {
+              "type": "button",
+              "icon": "fa fa-eye",
+              "actionType": "drawer",
+              "tooltip": "查看",
+              "drawer": {
+                "title": "查看信息",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    
+                    {
+                      "label": "-",
+                      "type": "static",
+                      "name": "id"
+                    },
+                    
+                    {
+                      "label": "用户名",
+                      "type": "static",
+                      "name": "username"
+                    },
+                    
+                    {
+                      "label": "密码",
+                      "type": "static",
+                      "name": "pwd"
+                    },
+                    
+                    {
+                      "label": "密码盐",
+                      "type": "static",
+                      "name": "salt"
+                    },
+                    
+                    {
+                      "label": "邮箱",
+                      "type": "static",
+                      "name": "email"
+                    },
+                    
+                    {
+                      "label": "昵称",
+                      "type": "static",
+                      "name": "nickname"
+                    },
+                    
+                    {
+                      "label": "头像",
+                      "type": "static",
+                      "name": "avatar"
+                    },
+                    
+                    {
+                      "label": "状态",
+                      "type": "static",
+                      "name": "status"
+                    },
+                    
+                    {
+                      "label": "备注",
+                      "type": "static",
+                      "name": "remark"
+                    },
+                    
+                    {
+                      "label": "更新时间",
+                      "type": "static",
+                      "name": "utime"
+                    },
+                    
+                    {
+                      "label": "创建时间",
+                      "type": "static",
+                      "name": "ctime"
+                    }
+                    
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-pencil",
+              "tooltip": "编辑",
+              "actionType": "drawer",
+              "drawer": {
+                "title": "修改记录",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "api": {
+                    "method": "PUT",
+                    "url": "${API_BASEURL}/admin/cms/user/update",
+                    "data": {
+                        "id": "${id}",
+                        "username": "${username}",
+                        "pwd": "${pwd}",
+                        "salt": "${salt}",
+                        "email": "${email}",
+                        "nickname": "${nickname}",
+                        "avatar": "${avatar}",
+                        "status": "${status}",
+                        "remark": "${remark}",
+                        "utime": "${utime}",
+                        "ctime": "${ctime}"
+                      
+                    },
+                    "messages": {
+                      "success": "修改成功"
+                    }
+                  },
+                  "body": [
+                    
+                    
+                    {
+                      "label": "用户名",
+                      "type": "input-text",
+                      "name": "username"
+                    },
+                    
+                    {
+                      "label": "密码",
+                      "type": "input-text",
+                      "name": "pwd"
+                    },
+                    
+                    {
+                      "label": "密码盐",
+                      "type": "input-text",
+                      "name": "salt"
+                    },
+                    
+                    {
+                      "label": "邮箱",
+                      "type": "input-text",
+                      "name": "email"
+                    },
+                    
+                    {
+                      "label": "昵称",
+                      "type": "input-text",
+                      "name": "nickname"
+                    },
+                    
+                    {
+                      "label": "头像",
+                      "type": "input-text",
+                      "name": "avatar"
+                    },
+                    
+                    {
+                      "label": "状态",
+                      "type": "input-text",
+                      "name": "status"
+                    },
+                    
+                    {
+                      "label": "备注",
+                      "type": "input-text",
+                      "name": "remark"
+                    },
+                    
+                    {
+                      "label": "更新时间",
+                      "type": "input-text",
+                      "name": "utime"
+                    },
+                    
+                    {
+                      "label": "创建时间",
+                      "type": "input-text",
+                      "name": "ctime"
+                    }
+                    
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-times text-danger",
+              "actionType": "ajax",
+              "tooltip": "删除",
+              "confirmText": "您确认要删除[${id}]?",
+              "api": {
+                "method": "post",
+                "url": "${API_BASEURL}/admin/cms/user/del",
+                "data": {
+                  "ids": "${id}"
+                }
+              }
+            }
+          ],
+          "toggled": true
+        }
+      ],
+      "affixHeader": true,
+      "columnsTogglable": "auto",
+      "placeholder": "暂无数据",
+      "combineNum": 0,
+      "bodyClassName": "panel-default"
+    }
+  ]
+}

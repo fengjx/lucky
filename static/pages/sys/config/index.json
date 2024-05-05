@@ -1,0 +1,363 @@
+{
+  "type": "page",
+  "name": "sys-config",
+  "body": [
+    {
+      "type": "crud",
+      "name": "sys_config",
+      "api": {
+        "method": "post",
+        "url": "${API_BASEURL}/admin/sys/config/query",
+        "data": {
+          "table_name": "sys_config",
+          "order_fields": [
+            {
+              "field": "${orderBy}",
+              "order_type": "${orderDir}"
+            }
+          ],
+          "conditions": [
+            {
+              "disable": "${!scope}",
+              "op": "and",
+              "field": "scope",
+              "condition_type": "eq",
+              "vals": [
+                "${scope}"
+              ]
+            },
+            {
+              "disable": "${!key}",
+              "op": "and",
+              "field": "key",
+              "condition_type": "like",
+              "vals": [
+                "%${key}%"
+              ]
+            },
+            {
+              "disable": "${!status || status == ''}",
+              "op": "and",
+              "field": "status",
+              "condition_type": "eq",
+              "vals": [
+                "${status}"
+              ]
+            }
+          ],
+          "page": {
+            "offset": "${(page - 1) * perPage}",
+            "limit": "${perPage}",
+            "query_count": true
+          }
+        }
+      },
+      "filter": {
+        "title": "搜索",
+        "body": [
+          {
+            "type": "group",
+            "body": [
+              {
+                "label": "范围",
+                "type": "input-text",
+                "size": "sm",
+                "name": "scope",
+                "placeholder": "范围搜索"
+              },
+              {
+                "label": "配置键",
+                "type": "input-text",
+                "size": "sm",
+                "name": "key",
+                "placeholder": "配置键搜索"
+              },
+              {
+                "label": "状态",
+                "type": "select",
+                "size": "sm",
+                "name": "status",
+                "source": "${options['sys_config.status']}"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "button",
+            "actionType": "drawer",
+            "icon": "fa fa-plus",
+            "label": "新增",
+            "drawer": {
+              "title": "新增数据",
+              "size": "xl",
+              "body": {
+                "type": "form",
+                "name": "add-form",
+                "api": "POST:${API_BASEURL}/admin/sys/config/add",
+                "body": [
+                  {
+                    "label": "范围",
+                    "type": "input-text",
+                    "name": "scope",
+                    "required": true
+                  },
+                  {
+                    "label": "配置键",
+                    "type": "input-text",
+                    "name": "key",
+                    "required": true
+                  },
+                  {
+                    "label": "配置值",
+                    "type": "input-text",
+                    "name": "value",
+                    "required": true
+                  },
+                  {
+                    "label": "状态",
+                    "type": "select",
+                    "name": "status",
+                    "required": true,
+                    "source": "${options['sys_config.status']}"
+                  },
+                  {
+                    "label": "备注",
+                    "type": "input-text",
+                    "name": "remark"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "reset",
+            "label": "重置"
+          },
+          {
+            "type": "submit",
+            "level": "primary",
+            "label": "查询"
+          }
+        ]
+      },
+      "bulkActions": [
+        {
+          "label": "批量删除",
+          "type": "button",
+          "level": "danger",
+          "actionType": "ajax",
+          "api": {
+            "method": "DELETE",
+            "url": "${API_BASEURL}/admin/sys/config/del",
+            "data": {
+              "ids": "${ids}"
+            }
+          },
+          "confirmText": "确定要批量删除?"
+        }
+      ],
+      "quickSaveApi": {
+        "method": "PATCH",
+        "url": "${API_BASEURL}/admin/sys/config/batch-update",
+        "data": {
+          "rows": "${rowsDiff}"
+        }
+      },
+      "footerToolbar": [
+        "statistics",
+        "switch-per-page",
+        "pagination"
+      ],
+      "columns": [
+        {
+          "label": "ID",
+          "name": "id"
+        },
+        {
+          "label": "范围",
+          "name": "scope"
+        },
+        {
+          "label": "配置键",
+          "name": "key"
+        },
+        {
+          "label": "配置值",
+          "name": "value"
+        },
+        {
+          "label": "备注",
+          "name": "remark"
+        },
+        {
+          "label": "更新时间",
+          "name": "utime",
+          "sortable": true,
+          "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+        },
+        {
+          "label": "创建时间",
+          "name": "ctime",
+          "sortable": true,
+          "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+        },
+        {
+          "label": "状态",
+          "name": "status",
+          "quickEdit": {
+            "mode": "inline",
+            "type": "select",
+            "source": "${options['sys_config.status']}"
+          }
+        },
+        {
+          "label": "操作",
+          "type": "operation",
+          "buttons": [
+            {
+              "type": "button",
+              "icon": "fa fa-eye",
+              "actionType": "drawer",
+              "tooltip": "查看",
+              "drawer": {
+                "title": "查看信息",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    {
+                      "label": "ID",
+                      "type": "static",
+                      "name": "id"
+                    },
+                    {
+                      "label": "范围",
+                      "type": "static",
+                      "name": "scope"
+                    },
+                    {
+                      "label": "配置键",
+                      "type": "static",
+                      "name": "key"
+                    },
+                    {
+                      "label": "配置值",
+                      "type": "static",
+                      "name": "value"
+                    },
+                    {
+                      "label": "配置状态",
+                      "type": "static",
+                      "name": "status",
+                      "tpl": "${getDictLabel('sys_config.status', status)}"
+                    },
+                    {
+                      "label": "备注",
+                      "type": "static",
+                      "name": "remark"
+                    },
+                    {
+                      "label": "更新时间",
+                      "type": "static",
+                      "name": "utime",
+                      "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+                    },
+                    {
+                      "label": "创建时间",
+                      "type": "static",
+                      "name": "ctime",
+                      "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-pencil",
+              "tooltip": "编辑",
+              "actionType": "drawer",
+              "drawer": {
+                "title": "修改数据",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "api": {
+                    "method": "PUT",
+                    "url": "${API_BASEURL}/admin/sys/config/update",
+                    "data": {
+                      "id": "${id}",
+                      "scope": "${scope}",
+                      "key": "${key}",
+                      "value": "${value}",
+                      "status": "${status}",
+                      "remark": "${remark}",
+                      "utime": "${utime}",
+                      "ctime": "${ctime}"
+                    },
+                    "messages": {
+                      "success": "修改成功"
+                    }
+                  },
+                  "body": [
+                    {
+                      "label": "范围",
+                      "type": "input-text",
+                      "name": "scope",
+                      "required": true
+                    },
+                    {
+                      "label": "配置键",
+                      "type": "input-text",
+                      "name": "key",
+                      "required": true
+                    },
+                    {
+                      "label": "配置值",
+                      "type": "input-text",
+                      "name": "value",
+                      "required": true
+                    },
+                    {
+                      "label": "状态",
+                      "type": "select",
+                      "name": "status",
+                      "required": true,
+                      "source": "${options['sys_config.status']}"
+                    },
+                    {
+                      "label": "备注",
+                      "type": "input-text",
+                      "name": "remark"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-times text-danger",
+              "actionType": "ajax",
+              "tooltip": "删除",
+              "confirmText": "您确认要删除[${id}]?",
+              "api": {
+                "method": "post",
+                "url": "${API_BASEURL}/admin/sys/config/del",
+                "data": {
+                  "ids": "${id}"
+                }
+              }
+            }
+          ],
+          "toggled": true
+        }
+      ],
+      "affixHeader": true,
+      "columnsTogglable": "auto",
+      "placeholder": "暂无数据",
+      "combineNum": 0,
+      "bodyClassName": "panel-default"
+    }
+  ]
+}

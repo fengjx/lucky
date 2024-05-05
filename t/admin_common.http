@@ -1,0 +1,36 @@
+
+### common insert
+POST {{BaseURL}}/admin/common/insert
+Content-Type: application/json
+X-Debug-UID: {{DebugUID}}
+
+{
+  "table_name": "sys_user",
+  "row": {
+    "username": "fengjx3",
+    "pwd": "1234",
+    "nickname": "fjx3"
+  }
+}
+
+
+### common query
+GET {{BaseURL}}/admin/common/query
+Content-Type: application/json
+X-Debug-UID: {{DebugUID}}
+
+{
+  "table_name": "sys_user",
+  "order_fields": [
+    {
+      "field": "ctime",
+      "order_type": "desc"
+    }
+  ],
+  "page": {
+    "offset": 0,
+    "limit": 10,
+    "count": 0,
+    "query_count": true
+  }
+}

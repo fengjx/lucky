@@ -1,0 +1,422 @@
+{
+  "type": "page",
+  "name": "sys-menu",
+  "body": [
+    {
+      "type": "crud",
+      "name": "sys_menu",
+      "api": {
+        "method": "post",
+        "url": "${API_BASEURL}/admin/sys/menu/query",
+        "data": {
+          "conditions": [
+            {
+              "disable": "${!status || status == ''}",
+              "op": "and",
+              "field": "status",
+              "condition_type": "eq",
+              "vals": [
+                "${status}"
+              ]
+            }
+          ],
+          "page": {
+            "offset": "${(page - 1) * perPage}",
+            "limit": "${perPage}",
+            "query_count": true
+          }
+        }
+      },
+      "filter": {
+        "title": "搜索",
+        "body": [
+          {
+            "type": "group",
+            "body": [
+              {
+                "label": "状态",
+                "type": "select",
+                "size": "sm",
+                "name": "status",
+                "source": "${options['sys_menu.status']}"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "button",
+            "actionType": "drawer",
+            "icon": "fa fa-plus",
+            "label": "新增",
+            "drawer": {
+              "title": "新增数据",
+              "size": "xl",
+              "body": {
+                "type": "form",
+                "name": "add-form",
+                "api": "POST:${API_BASEURL}/admin/sys/menu/add",
+                "body": [
+                  {
+                    "label": "父级菜单",
+                    "type": "tree-select",
+                    "name": "parent_id",
+                    "searchable": true,
+                    "required": true,
+                    "source": "GET:${API_BASEURL}/admin/sys/menu/options"
+                  },
+                  {
+                    "label": "菜单名称",
+                    "type": "input-text",
+                    "name": "name",
+                    "required": true
+                  },
+                  {
+                    "label": "是否显示",
+                    "type": "switch",
+                    "name": "visible",
+                    "trueValue": 1,
+                    "falseValue": 0,
+                    "value": 1
+                  },
+                  {
+                    "label": "图标",
+                    "type": "input-text",
+                    "name": "icon"
+                  },
+                  {
+                    "label": "菜单路径",
+                    "type": "input-text",
+                    "name": "path"
+                  },
+                  {
+                    "label": "重定向地址",
+                    "type": "input-text",
+                    "name": "redirect"
+                  },
+                  {
+                    "label": "schema 地址",
+                    "type": "input-text",
+                    "name": "schema_api"
+                  },
+                  {
+                    "label": "排序序号",
+                    "type": "input-text",
+                    "addOn": {
+                      "type": "text",
+                      "label": "数值越小排名越靠前"
+                    },
+                    "name": "sort_no"
+                  },
+                  {
+                    "label": "状态",
+                    "type": "select",
+                    "name": "status",
+                    "required": true,
+                    "source": "${options['sys_menu.status']}"
+                  },
+                  {
+                    "label": "备注",
+                    "type": "input-text",
+                    "name": "remark"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "reset",
+            "label": "重置"
+          },
+          {
+            "type": "submit",
+            "level": "primary",
+            "label": "查询"
+          }
+        ]
+      },
+      "bulkActions": [
+        {
+          "label": "批量删除",
+          "type": "button",
+          "level": "danger",
+          "actionType": "ajax",
+          "api": {
+            "method": "DELETE",
+            "url": "${API_BASEURL}/admin/sys/menu/del",
+            "data": {
+              "ids": "${ids}"
+            }
+          },
+          "confirmText": "确定要批量删除?"
+        }
+      ],
+      "quickSaveApi": {
+        "method": "PATCH",
+        "url": "${API_BASEURL}/admin/sys/menu/batch-update",
+        "data": {
+          "rows": "${rowsDiff}"
+        }
+      },
+      "footerToolbar": [
+        "statistics",
+        "switch-per-page",
+        "pagination"
+      ],
+      "columns": [
+        {
+          "label": "ID",
+          "name": "id"
+        },
+        {
+          "label": "菜单名称",
+          "name": "name"
+        },
+        {
+          "label": "是否显示",
+          "name": "visible",
+          "tpm": "${visible}"
+        },
+        {
+          "label": "图标",
+          "name": "icon"
+        },
+        {
+          "label": "菜单路径",
+          "name": "path"
+        },
+        {
+          "label": "重定向地址",
+          "name": "redirect"
+        },
+        {
+          "label": "排序序号",
+          "name": "sort_no"
+        },
+        {
+          "label": "备注",
+          "name": "remark"
+        },
+        {
+          "label": "状态",
+          "name": "status",
+          "quickEdit": {
+            "mode": "inline",
+            "type": "select",
+            "source": "${options['sys_menu.status']}"
+          }
+        },
+        {
+          "type": "operation",
+          "label": "操作",
+          "buttons": [
+            {
+              "type": "button",
+              "icon": "fa fa-eye",
+              "actionType": "drawer",
+              "tooltip": "查看",
+              "drawer": {
+                "title": "查看信息",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    {
+                      "label": "ID",
+                      "type": "static",
+                      "name": "id"
+                    },
+                    {
+                      "label": "菜单名称",
+                      "type": "static",
+                      "name": "name"
+                    },
+                    {
+                      "label": "父级菜单",
+                      "type": "tree-select",
+                      "name": "parent_id",
+                      "source": "GET:${API_BASEURL}/admin/sys/menu/options?disable_value=true&id=${parent_id}",
+                      "static": true
+                    },
+                    {
+                      "label": "是否显示",
+                      "type": "static",
+                      "name": "visible",
+                      "tpl": "${visible}"
+                    },
+                    {
+                      "label": "图标",
+                      "type": "static",
+                      "name": "icon"
+                    },
+                    {
+                      "label": "菜单路径",
+                      "type": "static",
+                      "name": "path"
+                    },
+                    {
+                      "label": "重定向地址",
+                      "type": "static",
+                      "name": "redirect"
+                    },
+                    {
+                      "label": "schema 地址",
+                      "type": "static",
+                      "name": "schema_api"
+                    },
+                    {
+                      "label": "排序序号",
+                      "type": "static",
+                      "name": "sort_no"
+                    },
+                    {
+                      "label": "状态",
+                      "type": "static",
+                      "name": "status",
+                      "tpl": "${getDictLabel('sys_menu.status', status)}"
+                    },
+                    {
+                      "label": "备注",
+                      "type": "static",
+                      "name": "remark"
+                    },
+                    {
+                      "label": "更新时间",
+                      "type": "static",
+                      "name": "utime",
+                      "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+                    },
+                    {
+                      "label": "创建时间",
+                      "type": "static",
+                      "name": "ctime",
+                      "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-pencil",
+              "tooltip": "编辑",
+              "actionType": "drawer",
+              "drawer": {
+                "title": "修改数据",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "api": {
+                    "method": "PUT",
+                    "url": "${API_BASEURL}/admin/sys/menu/update",
+                    "data": {
+                      "id": "${id}",
+                      "parent_id": "${parent_id}",
+                      "name": "${name}",
+                      "visible": "${visible}",
+                      "icon": "${icon}",
+                      "path": "${path}",
+                      "redirect": "${redirect}",
+                      "schema_api": "${schema_api}",
+                      "sort_no": "${sort_no}",
+                      "status": "${status}",
+                      "remark": "${remark}",
+                      "utime": "${utime}",
+                      "ctime": "${ctime}"
+                    },
+                    "messages": {
+                      "success": "修改成功"
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "tree-select",
+                      "name": "parent_id",
+                      "label": "父级菜单",
+                      "searchable": true,
+                      "required": true,
+                      "source": "GET:${API_BASEURL}/admin/sys/menu/options"
+                    },
+                    {
+                      "label": "菜单名称",
+                      "type": "input-text",
+                      "name": "name"
+                    },
+                    {
+                      "label": "是否显示",
+                      "type": "switch",
+                      "name": "visible",
+                      "trueValue": 1,
+                      "falseValue": 0
+                    },
+                    {
+                      "label": "图标",
+                      "type": "input-text",
+                      "name": "icon"
+                    },
+                    {
+                      "label": "菜单路径",
+                      "type": "input-text",
+                      "name": "path"
+                    },
+                    {
+                      "label": "重定向地址",
+                      "type": "input-text",
+                      "name": "redirect"
+                    },
+                    {
+                      "label": "schema 地址",
+                      "type": "input-text",
+                      "name": "schema_api"
+                    },
+                    {
+                      "label": "排序序号",
+                      "type": "input-text",
+                      "addOn": {
+                        "type": "text",
+                        "label": "数值越小排名越靠前"
+                      },
+                      "name": "sort_no"
+                    },
+                    {
+                      "label": "状态",
+                      "type": "select",
+                      "name": "status",
+                      "required": true,
+                      "source": "${options['sys_menu.status']}"
+                    },
+                    {
+                      "label": "备注",
+                      "type": "input-text",
+                      "name": "remark"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-times text-danger",
+              "actionType": "ajax",
+              "tooltip": "删除",
+              "confirmText": "您确认要删除[${id}]?",
+              "api": {
+                "method": "post",
+                "url": "${API_BASEURL}/admin/sys/menu/del",
+                "data": {
+                  "ids": "${id}"
+                }
+              }
+            }
+          ],
+          "toggled": true
+        }
+      ],
+      "affixHeader": true,
+      "columnsTogglable": "auto",
+      "placeholder": "暂无数据",
+      "combineNum": 0,
+      "bodyClassName": "panel-default"
+    }
+  ]
+}

@@ -1,0 +1,419 @@
+{
+  "type": "page",
+  "name": "sys-user",
+  "body": [
+    {
+      "type": "crud",
+      "name": "sys_user",
+      "api": {
+        "method": "POST",
+        "url": "${API_BASEURL}/admin/sys/user/query",
+        "data": {
+          "order_fields": [
+            {
+              "field": "${orderBy}",
+              "order_type": "${orderDir}"
+            }
+          ],
+          "conditions": [
+            {
+              "disable": "${!username}",
+              "op": "and",
+              "field": "username",
+              "condition_type": "like",
+              "vals": [
+                "%${username}%"
+              ]
+            },
+            {
+              "disable": "${!email}",
+              "op": "and",
+              "field": "email",
+              "condition_type": "like",
+              "vals": [
+                "%${email}%"
+              ]
+            },
+            {
+              "disable": "${!phone}",
+              "op": "and",
+              "field": "phone",
+              "condition_type": "like",
+              "vals": [
+                "%${phone}%"
+              ]
+            },
+            {
+              "disable": "${!status || status == ''}",
+              "op": "and",
+              "field": "status",
+              "condition_type": "eq",
+              "vals": [
+                "${status}"
+              ]
+            }
+          ],
+          "page": {
+            "offset": "${(page - 1) * perPage}",
+            "limit": "${perPage}",
+            "query_count": true
+          }
+        }
+      },
+      "filter": {
+        "title": "搜索",
+        "body": [
+          {
+            "type": "group",
+            "body": [
+              {
+                "label": "用户名",
+                "type": "input-text",
+                "name": "username",
+                "clearable": true,
+                "placeholder": "用户名搜索"
+              },
+              {
+                "label": "邮箱",
+                "type": "input-text",
+                "name": "email",
+                "clearable": true,
+                "placeholder": "邮箱搜索"
+              },
+              {
+                "label": "手机号",
+                "type": "input-text",
+                "name": "phone",
+                "clearable": true,
+                "placeholder": "手机号搜索"
+              },
+              {
+                "label": "状态",
+                "type": "select",
+                "name": "status",
+                "source": "${options['sys_user.status']}"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "button",
+            "actionType": "drawer",
+            "icon": "fa fa-plus",
+            "label": "新增",
+            "drawer": {
+              "title": "新增",
+              "size": "xl",
+              "body": {
+                "type": "form",
+                "name": "sample-edit-form",
+                "api": "${API_BASEURL}/admin/sys/user/add",
+                "body": [
+                  {
+                    "label": "用户名",
+                    "type": "input-text",
+                    "name": "username",
+                    "required": true
+                  },
+                  {
+                    "label": "密码",
+                    "type": "input-text",
+                    "name": "pwd",
+                    "required": true
+                  },
+                  {
+                    "label": "昵称",
+                    "type": "input-text",
+                    "name": "nickname",
+                    "required": true
+                  },
+                  {
+                    "label": "邮箱",
+                    "type": "input-text",
+                    "name": "email"
+                  },
+                  {
+                    "label": "手机号",
+                    "type": "input-text",
+                    "name": "phone"
+                  },
+                  {
+                    "label": "备注",
+                    "type": "textarea",
+                    "name": "remark"
+                  },
+                  {
+                    "label": "状态",
+                    "type": "select",
+                    "name": "status",
+                    "source": "${options['sys_user.status']}"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "reset",
+            "label": "重置"
+          },
+          {
+            "type": "submit",
+            "level": "primary",
+            "label": "查询"
+          }
+        ]
+      },
+      "bulkActions": [
+        {
+          "label": "批量删除",
+          "type": "button",
+          "level": "danger",
+          "actionType": "ajax",
+          "api": {
+            "method": "DELETE",
+            "url": "${API_BASEURL}/admin/sys/user/del",
+            "data": {
+              "ids": "${ids}"
+            }
+          },
+          "confirmText": "确定要批量删除?"
+        }
+      ],
+      "quickSaveApi": {
+        "method": "PATCH",
+        "url": "${API_BASEURL}/admin/sys/user/batch-update",
+        "data": {
+          "rows": "${rowsDiff}"
+        }
+      },
+      "footerToolbar": [
+        "statistics",
+        "switch-per-page",
+        "pagination"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "label": "ID",
+          "sortable": true
+        },
+        {
+          "label": "用户名",
+          "name": "username"
+        },
+        {
+          "label": "邮箱",
+          "name": "email"
+        },
+        {
+          "label": "昵称",
+          "name": "nickname"
+        },
+        {
+          "label": "更新时间",
+          "name": "utime",
+          "sortable": true,
+          "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+        },
+        {
+          "label": "创建时间",
+          "name": "ctime",
+          "sortable": true,
+          "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+        },
+        {
+          "label": "状态",
+          "name": "status",
+          "width": 150,
+          "quickEdit": {
+            "mode": "inline",
+            "type": "select",
+            "source": "${options['sys_user.status']}"
+          }
+        },
+        {
+          "label": "操作",
+          "type": "operation",
+          "width": 150,
+          "buttons": [
+            {
+              "type": "button",
+              "icon": "fa fa-eye",
+              "actionType": "drawer",
+              "tooltip": "查看",
+              "drawer": {
+                "title": "用户信息",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "body": [
+                    {
+                      "label": "ID",
+                      "type": "static",
+                      "name": "id"
+                    },
+                    {
+                      "label": "用户名",
+                      "type": "static",
+                      "name": "username"
+                    },
+                    {
+                      "label": "邮箱",
+                      "type": "static",
+                      "name": "email"
+                    },
+                    {
+                      "label": "昵称",
+                      "type": "static",
+                      "name": "nickname"
+                    },
+                    {
+                      "label": "状态",
+                      "type": "static",
+                      "name": "status",
+                      "tpl": "${getDictLabel('sys_user.status', status)}"
+                    },
+                    {
+                      "label": "更新时间",
+                      "type": "static",
+                      "name": "utime",
+                      "sortable": true,
+                      "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+                    },
+                    {
+                      "label": "创建时间",
+                      "type": "static",
+                      "name": "ctime",
+                      "sortable": true,
+                      "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
+                    },
+                    {
+                      "type": "static",
+                      "name": "remark",
+                      "label": "备注"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-pencil",
+              "tooltip": "编辑",
+              "actionType": "drawer",
+              "drawer": {
+                "title": "修改",
+                "size": "xl",
+                "body": {
+                  "type": "form",
+                  "api": {
+                    "method": "PUT",
+                    "url": "${API_BASEURL}/admin/sys/user/update",
+                    "data": {
+                      "id": "${id}",
+                      "username": "${username}",
+                      "pwd": "${pwd}",
+                      "nickname": "${nickname}",
+                      "email": "${email}",
+                      "phone": "${phone}",
+                      "remark": "${remark}",
+                      "status": "${status}"
+                    },
+                    "messages": {
+                      "success": "修改成功"
+                    }
+                  },
+                  "body": [
+                    {
+                      "label": "用户名",
+                      "type": "input-text",
+                      "name": "username",
+                      "required": true
+                    },
+                    {
+                      "label": "昵称",
+                      "type": "input-text",
+                      "name": "nickname",
+                      "required": true
+                    },
+                    {
+                      "label": "邮箱",
+                      "type": "input-text",
+                      "name": "email"
+                    },
+                    {
+                      "label": "手机号",
+                      "type": "input-text",
+                      "name": "phone"
+                    },
+                    {
+                      "label": "备注",
+                      "type": "textarea",
+                      "name": "remark"
+                    },
+                    {
+                      "label": "状态",
+                      "type": "select",
+                      "name": "status",
+                      "source": "${options['sys_user.status']}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-key",
+              "actionType": "dialog",
+              "tooltip": "重置密码",
+              "dialog": {
+                "title": "修改密码[${username}]",
+                "body": {
+                  "type": "form",
+                  "name": "sample-edit-form",
+                  "api": {
+                    "method": "PATCH",
+                    "url": "${API_BASEURL}/admin/sys/user/update-pwd",
+                    "data": {
+                      "id": "${id}",
+                      "pwd": "${new_pwd}"
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "input-text",
+                      "name": "new_pwd",
+                      "label": "密码",
+                      "required": true
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "icon": "fa fa-times text-danger",
+              "actionType": "ajax",
+              "tooltip": "删除",
+              "confirmText": "您确认要删除[${username}]?",
+              "api": {
+                "method": "DELETE",
+                "url": "${API_BASEURL}/admin/sys/user/del",
+                "data": {
+                  "ids": "${id}"
+                }
+              }
+            }
+          ],
+          "toggled": true
+        }
+      ],
+      "affixHeader": true,
+      "columnsTogglable": "auto",
+      "placeholder": "暂无数据",
+      "combineNum": 0,
+      "bodyClassName": "panel-default"
+    }
+  ]
+}

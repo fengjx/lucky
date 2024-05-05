@@ -17,6 +17,7 @@ WORKDIR ${WORK_DIR}
 
 COPY --from=builder /app/deployments/docker/*.sh .
 COPY --from=builder /app/conf ./conf
+COPY --from=builder /app/static ./static
 COPY --from=builder /app/${APP_NAME} .
 RUN ls -la
 

@@ -1,7 +1,7 @@
 db:
   default:
     type: mysql
-    dsn: root:1234@tcp(192.168.1.200:3306)/lca2?charset=utf8mb4,utf8&tls=false&timeout=10s&parseTime=true
+    dsn: root:1234@tcp(192.168.1.200:3306)/lca?charset=utf8mb4,utf8&tls=false&timeout=10s&parseTime=true
     show-sql: true
     max-idle: 5
     max-conn: 10

@@ -18,7 +18,7 @@ func init() {
 
 	appConfigFile, err := fs.Lookup("conf/app.yml", 5)
 	if err != nil {
-		log.Panic("config file not found")
+		log.Panic("config file not found", zap.String("path", "conf/app.yml"), zap.Error(err))
 	}
 	configs := []string{appConfigFile}
 	var configFile string
@@ -34,7 +34,7 @@ func init() {
 	if configFile != "" {
 		configFile, err = fs.Lookup(configFile, 5)
 		if err != nil {
-			log.Panic("config file not found", zap.String("file", configFile), zap.Error(err))
+			log.Panic("config file not found", zap.String("path", configFile), zap.Error(err))
 		}
 		log.Infof("load custom config file: %s", configFile)
 		configs = append(configs, configFile)

@@ -12,6 +12,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
+	"github.com/fengjx/lucky/connom/config"
+	"github.com/fengjx/lucky/connom/errno"
 	"github.com/fengjx/lucky/connom/kit"
 	"github.com/fengjx/lucky/connom/types"
 	"github.com/fengjx/lucky/integration/db"
@@ -110,6 +112,10 @@ func (svc userBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 
 // UpdatePwd 修改用户密码
 func (svc userBaseService) UpdatePwd(ctx context.Context, id int64, newPwd string) error {
+	if config.IsDemoEnv() {
+		// demo 环境不允许修改密码
+		return errno.ForbiddenErr
+	}
 	l := log.GetLogger(ctx).With(zap.Any("id", id))
 	pwd, salt := svc.genPwd(newPwd)
 	_, err := dao.SysUserDao.UpdateFieldContext(ctx, id, map[string]any{

@@ -82,8 +82,7 @@ VALUES (1, 0, '系统', '', '', '', '', 100, 1, 1, 'normal', ''),
        (6, 2, '菜单管理', '', 'menu', '', '/sys/menu/index.json', 20, 1, 1, 'normal', ''),
        (7, 0, 'Home', '', '/', '/sys', '', 1, 1, 1, 'normal', ''),
        (8, 2, '字典管理', '', 'dict', '', '/sys/dict/index.json', 30, 1, 1, 'normal', ''),
-       (9, 2, '配置管理', '', 'config', '', '/sys/config/index.json', 40, 1, 1, 'normal', ''),
-       (11, 0, 'page404', '', '/404', '', '/page404.json', 0, 0, 1, 'normal', '');
+       (9, 2, '配置管理', '', 'config', '', '/sys/config/index.json', 40, 1, 1, 'normal', '');
 
 
 INSERT IGNORE INTO sys_dict (`group`, group_name, value, label, status, remark)

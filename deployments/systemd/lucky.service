@@ -5,9 +5,10 @@ After = network.target syslog.target
 Wants = network.target
 
 [Service]
-Type = name
+Type = simple
+EnvironmentFile = /home/fengjx/app/lucky/app-demo.env
 # 启动命令
-ExecStart = /path/to/lucky -c /path/to/app-prod.yml
+ExecStart = /home/fengjx/app/lucky -c /home/fengjx/app/lucky/app-demo.yml
 
 [Install]
 WantedBy = multi-user.target

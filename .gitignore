@@ -24,3 +24,5 @@ ui
 .idea
 .dist
 logs
+conf/app-pre.yml
+conf/app-prod.yml

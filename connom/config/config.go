@@ -25,6 +25,7 @@ func init() {
 		}
 		appCfg = filepath.Join(filepath.Dir(exePath), "conf/app.yml")
 	}
+	log.Infof("appCfg: %s", appCfg)
 	appConfigFile, err := fs.Lookup(appCfg, 5)
 	if err != nil {
 		log.Panic("config file not found", zap.String("path", appCfg), zap.Error(err))

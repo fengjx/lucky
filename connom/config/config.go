@@ -3,7 +3,7 @@ package config
 import (
 	"flag"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/fengjx/go-halo/fs"
 	"github.com/fengjx/luchen"
@@ -18,9 +18,10 @@ func init() {
 	configArg := flag.String("c", "", "custom config file path")
 	flag.Parse()
 
-	appConfigFile, err := fs.Lookup(path.Join(env.GetAppPath(), "conf/app.yml"), 5)
+	appCfg := filepath.Join(env.GetAppPath(), "conf/app.yml")
+	appConfigFile, err := fs.Lookup(appCfg, 5)
 	if err != nil {
-		log.Panic("config file not found", zap.String("path", "conf/app.yml"), zap.Error(err))
+		log.Panic("config file not found", zap.String("path", appCfg), zap.Error(err))
 	}
 	configs := []string{appConfigFile}
 	var configFile string

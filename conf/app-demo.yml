@@ -9,7 +9,7 @@ auth:
 db:
   default:
     type: mysql
-    dsn: app:oxCrq3td5uq5pWw1@tcp(localhost:3306)/lca?charset=utf8mb4,utf8&tls=false&timeout=10s&parseTime=true
+    dsn: app:oxCrq3td5uq5pWw1@tcp(localhost:3306)/lucky?charset=utf8mb4,utf8&tls=false&timeout=10s&parseTime=true
     show-sql: true
     max-idle: 5
     max-conn: 10

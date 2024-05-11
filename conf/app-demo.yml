@@ -1,11 +1,3 @@
-server:
-  http:
-    cors:
-      allow-origins:
-        - "http://admin.luchen.fun"
-auth:
-  version: 1
-  secret: DfY5YlgJEHRRYULJDyYQyX9zx4Ex0luQ
 db:
   default:
     type: mysql

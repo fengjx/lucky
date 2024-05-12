@@ -1,4 +1,4 @@
 
 GET {{BaseURL}}/api/open/app/data
 Content-Type: application/json
-X-Admin-UID: {{AdminUID}}
+

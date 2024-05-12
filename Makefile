@@ -21,6 +21,7 @@ build-go:
 	GO111MODULE=on CGO_ENABLED=0 GOOS=linux go build -trimpath -mod=readonly -v -o $(DIST_PATH)/${BINARY_NAME} main.go
 	cp -rf conf $(DIST_PATH)
 	cp -rf static $(DIST_PATH)
+	cp deployments/run.sh $(DIST_PATH)
 
 
 .PHONY: migrate

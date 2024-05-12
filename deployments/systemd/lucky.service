@@ -1,0 +1,17 @@
+[Unit]
+# 服务名称，可自定义
+Description = lucky server
+After = network.target syslog.target
+Wants = network.target
+
+[Service]
+Type = simple
+User = fengjx
+EnvironmentFile = /home/fengjx/app/lucky/env
+# 启动命令
+ExecStart = /home/fengjx/app/lucky/bin/lucky -c /home/fengjx/app/lucky/bin/app-demo.yml
+Restart = always
+RestartSec = 3
+
+[Install]
+WantedBy = multi-user.target

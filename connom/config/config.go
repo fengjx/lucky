@@ -3,9 +3,11 @@ package config
 import (
 	"flag"
 	"os"
+	"path/filepath"
 
 	"github.com/fengjx/go-halo/fs"
 	"github.com/fengjx/luchen"
+	"github.com/fengjx/luchen/env"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 )
@@ -15,10 +17,18 @@ var appConfig AppConfig
 func init() {
 	configArg := flag.String("c", "", "custom config file path")
 	flag.Parse()
-
-	appConfigFile, err := fs.Lookup("conf/app.yml", 5)
+	appCfg := "conf/app.yml"
+	if !env.IsLocal() {
+		exePath, err := os.Executable()
+		if err != nil {
+			log.Panic("can not get exec file path", zap.Error(err))
+		}
+		appCfg = filepath.Join(filepath.Dir(exePath), "conf/app.yml")
+	}
+	log.Infof("appCfg: %s", appCfg)
+	appConfigFile, err := fs.Lookup(appCfg, 5)
 	if err != nil {
-		log.Panic("config file not found", zap.String("path", "conf/app.yml"), zap.Error(err))
+		log.Panic("config file not found", zap.String("path", appCfg), zap.Error(err))
 	}
 	configs := []string{appConfigFile}
 	var configFile string

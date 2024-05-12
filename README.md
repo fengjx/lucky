@@ -20,6 +20,10 @@
 3. 前端页面使用 [amis](https://github.com/baidu/amis) 开发，你需要学习如何使用`amis`，[快速入门文档](https://baidu.github.io/amis/zh-CN/docs/start/getting-started)。
 4. 虽然[amis](https://github.com/baidu/amis)通过json配置页面，但是如果你有一些定制化需求，还是需要懂一些基础的js知识。
 
+## 文档
+
+<https://luchen.fun/lucky/introduction>
+
 ## 快速体验
 
 演示地址：<http://admin.luchen.fun>
@@ -28,9 +32,9 @@
 
 ## 系统截图
 
-![截图](/screenshot/lucky/login.png)
+![截图](https://luchen.fun/screenshot/lucky/login.png)
 
-![截图](/screenshot/lucky/admin-user.png)
+![截图](https://luchen.fun/screenshot/lucky/admin-user.png)
 
 ## 相关项目
 

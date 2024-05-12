@@ -28,18 +28,16 @@
 
 ## 系统截图
 
-![截图](https://luchen.fun/screenshot/lucky/login.png)
+![截图](/screenshot/lucky/login.png)
 
-<img src="https://luchen.fun/screenshot/lucky/login.png" width="100%">
-
-<img src="https://luchen.fun/screenshot/lucky/admin-user.png" width="100%">
+![截图](/screenshot/lucky/admin-user.png)
 
 ## 相关项目
 
 - [lucky](https://github.com/fengjx/lucky) 后端工程
 - [lucky-web](https://github.com/fengjx/lucky-web) 前端工程
 - [lc](https://github.com/fengjx/lc) cli 工具
-- [luchen](https://github.com/fengjx/luchen) cli 工具
+- [luchen](https://github.com/fengjx/luchen) 基础框架
 - [daox](https://github.com/fengjx/daox) 数据库访问辅助类库
 
 ## 版权声明

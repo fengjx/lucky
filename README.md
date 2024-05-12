@@ -40,7 +40,13 @@
 - [luchen](https://github.com/fengjx/luchen) 基础框架
 - [daox](https://github.com/fengjx/daox) 数据库访问辅助类库
 
+## 技术交流群
+
+加我微信拉你进群，请备注：`lc`
+
+<img src="https://luchen.fun/assets/img/wx.jpg" width="40%">
+
 ## 版权声明
 
-你可以自由使用本项目用于个人、商业用途及二次开发，但请保留源码出处。
+你可以自由使用本项目用于个人、商业用途及二次开发，但请注明源码出处。
 

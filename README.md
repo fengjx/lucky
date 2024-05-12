@@ -20,12 +20,6 @@
 3. 前端页面使用 [amis](https://github.com/baidu/amis) 开发，你需要学习如何使用`amis`，[快速入门文档](https://baidu.github.io/amis/zh-CN/docs/start/getting-started)。
 4. 虽然[amis](https://github.com/baidu/amis)通过json配置页面，但是如果你有一些定制化需求，还是需要懂一些基础的js知识。
 
-## 工程说明
-
-- [lucky](https://github.com/fengjx/lucky) 后端工程
-- [lucky-web](https://github.com/fengjx/lucky-web) 前端工程
-- [lc](https://github.com/fengjx/lc) cli 工具
-
 ## 快速体验
 
 演示地址：<http://admin.luchen.fun>
@@ -36,7 +30,17 @@
 
 ![截图](https://luchen.fun/screenshot/lucky/login.png)
 
-![截图](https://luchen.fun/screenshot/lucky/admin-user.png)
+<img src="https://luchen.fun/screenshot/lucky/login.png" width="100%">
+
+<img src="https://luchen.fun/screenshot/lucky/admin-user.png" width="100%">
+
+## 相关项目
+
+- [lucky](https://github.com/fengjx/lucky) 后端工程
+- [lucky-web](https://github.com/fengjx/lucky-web) 前端工程
+- [lc](https://github.com/fengjx/lc) cli 工具
+- [luchen](https://github.com/fengjx/luchen) cli 工具
+- [daox](https://github.com/fengjx/daox) 数据库访问辅助类库
 
 ## 版权声明
 

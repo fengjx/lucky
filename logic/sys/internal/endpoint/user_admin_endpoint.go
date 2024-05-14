@@ -14,6 +14,7 @@ import (
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
 	"github.com/fengjx/lucky/logic/sys/internal/protocol"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
+	"github.com/fengjx/lucky/middleware"
 )
 
 var userAdmin = userAdminEndpoint{}
@@ -52,7 +53,7 @@ func (e userAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
 }
 
 func (e userAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+	endp := func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		param := request.(*types.DelReq)
 		res := types.OKRsp{Success: true}
 		if param.IDs == "" {
@@ -68,6 +69,7 @@ func (e userAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
 		}
 		return
 	}
+	return middleware.DemoForbiddenMiddleware(endp)
 }
 
 func (e userAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
@@ -98,7 +100,7 @@ func (e userAdminEndpoint) makeQueryEndpoint() luchen.Endpoint {
 }
 
 func (e userAdminEndpoint) makeUpdatePwdEndpoint() luchen.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+	endp := func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(*protocol.UpdateUserPwdReq)
 		err = service.UserBaseSvc.UpdatePwd(ctx, req.ID, req.Pwd)
 		if err != nil {
@@ -108,4 +110,5 @@ func (e userAdminEndpoint) makeUpdatePwdEndpoint() luchen.Endpoint {
 			Success: true,
 		}, nil
 	}
+	return middleware.DemoForbiddenMiddleware(endp)
 }

@@ -93,7 +93,7 @@ func NewHandler(e luchen.Endpoint,
 
 	options = append(options, httptransport.ServerErrorEncoder(ErrorEncoder))
 	targetEndpoint := luchen.AccessMiddleware(&luchen.AccessLogOpt{
-		PrintResp: true,
+		MaxAge: 15,
 		ContextFields: map[string]luchen.GetValueFromContext{
 			"uid": func(ctx context.Context) any {
 				return current.UID(ctx)

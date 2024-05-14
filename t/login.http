@@ -4,8 +4,8 @@ POST {{BaseURL}}/api/open/sys/login
 Content-Type: application/json
 
 {
-  "username": "fengjx",
-  "password": "1024"
+  "username": "admin",
+  "password": "luchen"
 }
 
 > {% client.global.set("access_token", response.body.data.token); %}

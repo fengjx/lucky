@@ -9,7 +9,7 @@ import (
 	"github.com/fengjx/lucky/connom/errno"
 )
 
-var DemoForbiddenMiddleware = ForbiddenMiddleware("local")
+var DemoForbiddenMiddleware = ForbiddenMiddleware("demo")
 
 // ForbiddenMiddleware 指定环境禁止执行
 func ForbiddenMiddleware(envName string) luchen.Middleware {

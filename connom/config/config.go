@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fengjx/go-halo/fs"
+	"github.com/fengjx/go-halo/fskit"
 	"github.com/fengjx/luchen"
 	"github.com/fengjx/luchen/env"
 	"github.com/fengjx/luchen/log"
@@ -26,7 +26,7 @@ func init() {
 		appCfg = filepath.Join(filepath.Dir(exePath), "conf/app.yml")
 	}
 	log.Infof("appCfg: %s", appCfg)
-	appConfigFile, err := fs.Lookup(appCfg, 5)
+	appConfigFile, err := fskit.Lookup(appCfg, 5)
 	if err != nil {
 		log.Panic("config file not found", zap.String("path", appCfg), zap.Error(err))
 	}
@@ -42,7 +42,7 @@ func init() {
 		}
 	}
 	if configFile != "" {
-		configFile, err = fs.Lookup(configFile, 5)
+		configFile, err = fskit.Lookup(configFile, 5)
 		if err != nil {
 			log.Panic("config file not found", zap.String("path", configFile), zap.Error(err))
 		}

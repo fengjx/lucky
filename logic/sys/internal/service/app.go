@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fengjx/go-halo/fs"
+	"github.com/fengjx/go-halo/fskit"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
@@ -18,7 +18,7 @@ type appService struct {
 }
 
 func (svc appService) Init(ctx context.Context) error {
-	initSQLFile, err := fs.Lookup("conf/init.sql", 5)
+	initSQLFile, err := fskit.Lookup("conf/init.sql", 5)
 	if err != nil {
 		log.ErrorCtx(ctx, "conf/init.sql not found")
 		return err

@@ -4,8 +4,8 @@ go 1.22
 
 require (
 	github.com/fengjx/daox v1.0.3-rc01
-	github.com/fengjx/go-halo v0.0.4-rc02
-	github.com/fengjx/luchen v1.0.5-rc05
+	github.com/fengjx/go-halo v0.1.0-rc02
+	github.com/fengjx/luchen v1.0.5-rc10
 	github.com/go-kit/kit v0.13.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt/v5 v5.2.0

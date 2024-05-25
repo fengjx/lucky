@@ -20,6 +20,3 @@ target:
     sys_menu:
       module: sys
       simple-name: menu
-    cms_news:
-      module: cms
-      simple-name: news

@@ -14,7 +14,7 @@ import (
 	"github.com/fengjx/luchen"
 
 	"github.com/fengjx/lucky/connom/errno"
-	"github.com/fengjx/lucky/current"
+	"github.com/fengjx/lucky/middleware"
 )
 
 const (
@@ -92,14 +92,7 @@ func NewHandler(e luchen.Endpoint,
 	options ...httptransport.ServerOption) *luchen.HTTPTransportServer {
 
 	options = append(options, httptransport.ServerErrorEncoder(ErrorEncoder))
-	targetEndpoint := luchen.AccessMiddleware(&luchen.AccessLogOpt{
-		MaxDay: 15,
-		ContextFields: map[string]luchen.GetValueFromContext{
-			"uid": func(ctx context.Context) any {
-				return current.UID(ctx)
-			},
-		},
-	})(e)
+	targetEndpoint := middleware.AccessMiddleware(e)
 	return luchen.NewHTTPTransportServer(
 		targetEndpoint,
 		dec,

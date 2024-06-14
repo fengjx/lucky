@@ -337,8 +337,9 @@
                     },
                     {
                       "label": "数据状态",
-                      "type": "input-text",
-                      "name": "status"
+                      "type": "select",
+                      "name": "status",
+                      "source": "${options['sys_dict.status']}"
                     },
                     {
                       "label": "备注",

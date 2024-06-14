@@ -95,3 +95,21 @@ func (e newsAdminEndpoint) makeQueryEndpoint() luchen.Endpoint {
 		return pageVO.ToAmisResp(), nil
 	}
 }
+
+func (e newsAdminEndpoint) makeTopicsEndpoint() luchen.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		topics, err := service.TopicSvc.ListAll(ctx)
+		if err != nil {
+			log.ErrorCtx(ctx, "find all topic err", zap.Error(err))
+			return nil, err
+		}
+		var res []types.Option
+		for _, topic := range topics {
+			res = append(res, types.Option{
+				Label: topic.Name,
+				Value: topic.Code,
+			})
+		}
+		return res, nil
+	}
+}

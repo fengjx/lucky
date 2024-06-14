@@ -10,6 +10,10 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fengjx/daox v1.0.3-rc01 h1:WaK9iftLgkMKfWgA3HD5ZdrBBqz/bnW7MipcHqgZ7R8=
 github.com/fengjx/daox v1.0.3-rc01/go.mod h1:fnYh2yPMmwZapABBKV/U/HgyBpSN19+I2p1U124MI/c=
+github.com/fengjx/daox v1.1.0-rc01 h1:JsoTzNvTvv0Ch8NpGob0kt26+cpjtFMMdiPEb9L+OWs=
+github.com/fengjx/daox v1.1.0-rc01/go.mod h1:fnYh2yPMmwZapABBKV/U/HgyBpSN19+I2p1U124MI/c=
+github.com/fengjx/daox v1.1.0-rc02 h1:N/+0H2wpYJoTNun7H7UM/2oFWFUpCiTEGaYmMQMl/3M=
+github.com/fengjx/daox v1.1.0-rc02/go.mod h1:fnYh2yPMmwZapABBKV/U/HgyBpSN19+I2p1U124MI/c=
 github.com/fengjx/go-halo v0.1.1-rc01 h1:gr5ah3iaxF4vWlis/EBFC4SDNcMk8S5uC06iIjgAn1Y=
 github.com/fengjx/go-halo v0.1.1-rc01/go.mod h1:2+XqPtPM+OshHRoDfVH681Sh9zFJ95lOd5QRNMRaISs=
 github.com/fengjx/luchen v1.0.5-rc11 h1:A/MGo4dDd72EGdkDvUdPKH7WSWhFutITLo5aeuw+sAM=

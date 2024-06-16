@@ -43,10 +43,7 @@ func (svc dictBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 
 // Add 新增记录
 func (svc dictBaseService) Add(ctx context.Context, model *entity.SysDict) (int64, error) {
-	return dao.SysDictDao.SaveContext(ctx, model,
-		meta.SysDictMeta.Ctime,
-		meta.SysDictMeta.Utime,
-	)
+	return dao.SysDictDao.SaveContext(ctx, model)
 }
 
 // Update 更新记录

@@ -232,7 +232,8 @@
                     {
                       "label": "状态",
                       "type": "static",
-                      "name": "status"
+                      "name": "status",
+                      "tpl": "${getDictLabel('cms_news.status', status)}"
                     },
                     {
                       "label": "备注",
@@ -242,12 +243,14 @@
                     {
                       "label": "更新时间",
                       "type": "static",
-                      "name": "utime"
+                      "name": "utime",
+                      "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
                     },
                     {
                       "label": "创建时间",
                       "type": "static",
-                      "name": "ctime"
+                      "name": "ctime",
+                      "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
                     }
                   ]
                 }

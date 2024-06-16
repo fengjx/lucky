@@ -9,7 +9,5 @@ import (
 func Init(_ context.Context, httpServer *luchen.HTTPServer) {
 	httpServer.Handler(
 		&newsAdminHandler{},
-		&userAdminHandler{},
-		&subscriptionAdminHandler{},
 	)
 }

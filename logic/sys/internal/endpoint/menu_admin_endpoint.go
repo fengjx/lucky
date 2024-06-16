@@ -14,6 +14,7 @@ import (
 	"github.com/fengjx/lucky/logic/sys/internal/data/dto"
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
 	"github.com/fengjx/lucky/logic/sys/internal/data/enum"
+	"github.com/fengjx/lucky/logic/sys/internal/protocol"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
 )
 
@@ -138,13 +139,13 @@ func (e sysMenuAdminEndpoint) makeOptionsEndpoint() luchen.Endpoint {
 	}
 }
 
-func (e sysMenuAdminEndpoint) buildMenu(menus []*dto.MenuDTO) []*types.Menu {
+func (e sysMenuAdminEndpoint) buildMenu(menus []*dto.MenuDTO) []*protocol.Menu {
 	if len(menus) == 0 {
 		return nil
 	}
-	var options []*types.Menu
+	var options []*protocol.Menu
 	for _, menu := range menus {
-		opt := &types.Menu{
+		opt := &protocol.Menu{
 			Label:     menu.Name,
 			Icon:      menu.Icon,
 			URL:       menu.Path,
@@ -168,7 +169,7 @@ func (e sysMenuAdminEndpoint) makeFetchEndpoint() luchen.Endpoint {
 			return nil, err
 		}
 		pages := e.buildMenu(treeList)
-		rsp := types.App{
+		rsp := protocol.App{
 			Pages: pages,
 		}
 		return rsp, nil

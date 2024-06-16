@@ -110,7 +110,7 @@
                   },
                   {
                     "label": "配置值",
-                    "type": "input-text",
+                    "type": "textarea",
                     "name": "value",
                     "required": true
                   },
@@ -315,7 +315,7 @@
                     },
                     {
                       "label": "配置值",
-                      "type": "input-text",
+                      "type": "textarea",
                       "name": "value",
                       "required": true
                     },

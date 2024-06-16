@@ -1,7 +1,7 @@
 db:
   default:
     type: mysql
-    dsn: lucky:QWiJ7p2N3XsRYeEF@tcp(localhost:3310)/lucky?charset=utf8mb4,utf8&tls=false&timeout=10s&parseTime=true
+    dsn: lucky:QWiJ7p2N3XsRYeEF@tcp(localhost:3301)/lucky?charset=utf8mb4,utf8&tls=false&timeout=10s&parseTime=true
     show-sql: true
     max-idle: 5
     max-conn: 10

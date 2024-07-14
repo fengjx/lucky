@@ -19,6 +19,7 @@ func (h newsAdminHandler) Bind(router *luchen.HTTPServeMux) {
 		sub.Handle("/del", h.del())
 		sub.Handle("/batch-update", h.batchUpdate())
 		sub.Handle("/query", h.query())
+		sub.Handle("/topics", h.topics())
 	})
 }
 
@@ -58,6 +59,14 @@ func (h newsAdminHandler) batchUpdate() *luchen.HTTPTransportServer {
 	return http.NewHandler(
 		newsAdmin.makeBatchUpdateEndpoint(),
 		luchen.DecodeHTTPJSONRequest[types.BatchUpdate],
+		luchen.EncodeHTTPJSONResponse(http.ResponseWrapper),
+	)
+}
+
+func (h newsAdminHandler) topics() *luchen.HTTPTransportServer {
+	return http.NewHandler(
+		newsAdmin.makeTopicsEndpoint(),
+		luchen.NopHTTPRequestDecoder,
 		luchen.EncodeHTTPJSONResponse(http.ResponseWrapper),
 	)
 }

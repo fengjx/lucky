@@ -82,11 +82,7 @@ func (svc menuBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 // Add 新增记录
 func (svc menuBaseService) Add(ctx context.Context, model *entity.SysMenu) (int64, error) {
 	return dao.SysMenuDao.SaveContext(ctx, model,
-		daox.WithInsertOmits(
-			meta.SysMenuMeta.Ctime,
-			meta.SysMenuMeta.Utime,
-			meta.SysMenuMeta.IsSys,
-		),
+		daox.WithInsertOmits(meta.SysMenuMeta.IsSys),
 	)
 }
 

@@ -49,12 +49,7 @@ func (svc userBaseService) Add(ctx context.Context, sysUser *entity.SysUser) (in
 	md5Pwd, salt := svc.genPwd(sysUser.Pwd)
 	sysUser.Salt = salt
 	sysUser.Pwd = md5Pwd
-	return dao.SysUserDao.SaveContext(ctx, sysUser,
-		daox.WithInsertOmits(
-			meta.SysUserMeta.Ctime,
-			meta.SysUserMeta.Utime,
-		),
-	)
+	return dao.SysUserDao.SaveContext(ctx, sysUser)
 }
 
 // Update 更新记录

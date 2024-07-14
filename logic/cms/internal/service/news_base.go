@@ -50,6 +50,8 @@ func (svc newsBaseService) Add(ctx context.Context, model *entity.CmsNews) (int6
 func (svc newsBaseService) Update(ctx context.Context, model *entity.CmsNews) (bool, error) {
 	return dao.CmsNewsDao.UpdateContext(ctx, model,
 		meta.CmsNewsMeta.PrimaryKey(),
+		meta.CmsNewsMeta.Utime,
+		meta.CmsNewsMeta.Ctime,
 	)
 }
 

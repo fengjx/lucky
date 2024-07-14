@@ -1,0 +1,5 @@
+
+### 获取主题
+GET {{BaseURL}}/admin/cms/news/topics
+Content-Type: application/json
+X-Admin-UID: {{AdminUID}}

@@ -44,6 +44,8 @@ func init() {
 	}
 	defaultDB := dbMap[defaultDBName]
 	daox.UseDefaultMasterDB(defaultDB)
+	// 默认忽略字段，这两个字段交给mysql自行处理，主要是为了一些问题排查提供依据，即使手动修改数据库也会触发字段更新
+	// 如果业务代码需要用到创建时间和更新时间，可以自行维护一个字段
 	daox.UseSaveOmits("ctime", "utime")
 }
 

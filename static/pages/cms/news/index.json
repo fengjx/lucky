@@ -1,6 +1,3 @@
-
-
-
 {
   "type": "page",
   "name": "cms-news",
@@ -20,12 +17,12 @@
           ],
           "conditions": [
             {
-              "disable": "${!id}",
+              "disable": "${!title}",
               "op": "and",
-              "field": "id",
-              "condition_type": "eq",
+              "field": "title",
+              "condition_type": "like",
               "vals": [
-                "id"
+                "%${title}%"
               ]
             },
             {
@@ -52,12 +49,12 @@
             "type": "group",
             "body": [
               {
-                "label": "ID",
+                "label": "标题",
                 "type": "input-text",
                 "size": "sm",
-                "name": "id",
+                "name": "title",
                 "clearable": true,
-                "placeholder": "ID搜索"
+                "placeholder": "标题"
               },
               {
                 "label": "状态",
@@ -83,50 +80,36 @@
                 "name": "add-form",
                 "api": "POST:${API_BASEURL}/admin/cms/news/add",
                 "body": [
-                  
-                  
                   {
                     "label": "标题",
                     "type": "input-text",
                     "name": "title"
                   },
-                  
                   {
                     "label": "内容",
-                    "type": "input-text",
-                    "name": "content"
+                    "type": "textarea",
+                    "name": "content",
+                    "required": true
                   },
-                  
                   {
                     "label": "主题",
-                    "type": "input-text",
-                    "name": "topic"
+                    "type": "select",
+                    "name": "topic",
+                    "required": true,
+                    "source": "POST:${API_BASEURL}/admin/cms/news/topics"
                   },
-                  
                   {
                     "label": "状态",
-                    "type": "input-text",
-                    "name": "status"
+                    "type": "select",
+                    "name": "status",
+                    "source": "${options['cms_news.status']}",
+                    "required": true
                   },
-                  
                   {
                     "label": "备注",
                     "type": "input-text",
                     "name": "remark"
-                  },
-                  
-                  {
-                    "label": "更新时间",
-                    "type": "input-text",
-                    "name": "utime"
-                  },
-                  
-                  {
-                    "label": "创建时间",
-                    "type": "input-text",
-                    "name": "ctime"
                   }
-                  
                 ]
               }
             }
@@ -171,47 +154,46 @@
         "pagination"
       ],
       "columns": [
-        
         {
           "label": "-",
           "name": "id"
         },
-        
         {
           "label": "标题",
           "name": "title"
         },
-        
         {
           "label": "内容",
           "name": "content"
         },
-        
         {
           "label": "主题",
           "name": "topic"
         },
-        
-        {
-          "label": "状态",
-          "name": "status"
-        },
-        
         {
           "label": "备注",
           "name": "remark"
         },
-        
+        {
+          "label": "状态",
+          "type": "static",
+          "name": "status",
+          "tpl": "${getDictLabel('cms_news.status', status)}"
+        },
         {
           "label": "更新时间",
-          "name": "utime"
+          "type": "static",
+          "name": "utime",
+          "sortable": true,
+          "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
         },
-        
         {
           "label": "创建时间",
-          "name": "ctime"
+          "type": "static",
+          "name": "ctime",
+          "sortable": true,
+          "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
         },
-        
         {
           "type": "operation",
           "label": "操作",
@@ -227,55 +209,49 @@
                 "body": {
                   "type": "form",
                   "body": [
-                    
                     {
                       "label": "-",
                       "type": "static",
                       "name": "id"
                     },
-                    
                     {
                       "label": "标题",
                       "type": "static",
                       "name": "title"
                     },
-                    
                     {
                       "label": "内容",
                       "type": "static",
                       "name": "content"
                     },
-                    
                     {
                       "label": "主题",
                       "type": "static",
                       "name": "topic"
                     },
-                    
                     {
                       "label": "状态",
                       "type": "static",
-                      "name": "status"
+                      "name": "status",
+                      "tpl": "${getDictLabel('cms_news.status', status)}"
                     },
-                    
                     {
                       "label": "备注",
                       "type": "static",
                       "name": "remark"
                     },
-                    
                     {
                       "label": "更新时间",
                       "type": "static",
-                      "name": "utime"
+                      "name": "utime",
+                      "tpl": "${utime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
                     },
-                    
                     {
                       "label": "创建时间",
                       "type": "static",
-                      "name": "ctime"
+                      "name": "ctime",
+                      "tpl": "${ctime | date:YYYY-MM-DD hh\\:mm\\:ss:x}"
                     }
-                    
                   ]
                 }
               }
@@ -294,65 +270,44 @@
                     "method": "PUT",
                     "url": "${API_BASEURL}/admin/cms/news/update",
                     "data": {
-                        "id": "${id}",
-                        "title": "${title}",
-                        "content": "${content}",
-                        "topic": "${topic}",
-                        "status": "${status}",
-                        "remark": "${remark}",
-                        "utime": "${utime}",
-                        "ctime": "${ctime}"
-                      
+                      "id": "${id}",
+                      "title": "${title}",
+                      "content": "${content}",
+                      "topic": "${topic}",
+                      "status": "${status}",
+                      "remark": "${remark}"
                     },
                     "messages": {
                       "success": "修改成功"
                     }
                   },
                   "body": [
-                    
-                    
                     {
                       "label": "标题",
                       "type": "input-text",
-                      "name": "title"
+                      "name": "title",
+                      "required": true
                     },
-                    
                     {
                       "label": "内容",
                       "type": "input-text",
-                      "name": "content"
+                      "name": "content",
+                      "required": true
                     },
-                    
                     {
                       "label": "主题",
-                      "type": "input-text",
-                      "name": "topic"
+                      "type": "select",
+                      "name": "topic",
+                      "required": true,
+                      "source": "POST:${API_BASEURL}/admin/cms/news/topics"
                     },
-                    
                     {
                       "label": "状态",
-                      "type": "input-text",
-                      "name": "status"
-                    },
-                    
-                    {
-                      "label": "备注",
-                      "type": "input-text",
-                      "name": "remark"
-                    },
-                    
-                    {
-                      "label": "更新时间",
-                      "type": "input-text",
-                      "name": "utime"
-                    },
-                    
-                    {
-                      "label": "创建时间",
-                      "type": "input-text",
-                      "name": "ctime"
+                      "type": "select",
+                      "name": "status",
+                      "source": "${options['cms_news.status']}",
+                      "required": true
                     }
-                    
                   ]
                 }
               }

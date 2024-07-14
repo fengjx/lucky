@@ -43,12 +43,7 @@ func (svc configBaseService) Query(ctx context.Context, query *daox.QueryRecord)
 
 // Add 新增记录
 func (svc configBaseService) Add(ctx context.Context, model *entity.SysConfig) (int64, error) {
-	return dao.SysConfigDao.SaveContext(ctx, model,
-		daox.WithInsertOmits(
-			meta.SysConfigMeta.Ctime,
-			meta.SysConfigMeta.Utime,
-		),
-	)
+	return dao.SysConfigDao.SaveContext(ctx, model)
 }
 
 // Update 更新记录

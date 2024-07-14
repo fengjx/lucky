@@ -44,8 +44,10 @@ func (svc dictBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 // Add 新增记录
 func (svc dictBaseService) Add(ctx context.Context, model *entity.SysDict) (int64, error) {
 	return dao.SysDictDao.SaveContext(ctx, model,
-		meta.SysDictMeta.Ctime,
-		meta.SysDictMeta.Utime,
+		daox.WithInsertOmits(
+			meta.SysDictMeta.Ctime,
+			meta.SysDictMeta.Utime,
+		),
 	)
 }
 
@@ -84,9 +86,9 @@ func (svc dictBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 // DeleteByIDs 批量更新
 func (svc dictBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
-	_, err := dao.SysDictDao.DeleteByCondContext(ctx, ql.C().And(
-		meta.SysDictMeta.IdIn(ids...),
-	))
+	_, err := dao.SysDictDao.Deleter().
+		Where(ql.C(meta.SysDictMeta.IdIn(ids...))).
+		ExecContext(ctx)
 	if err != nil {
 		l.Error("delete sys_dict err", zap.Error(err))
 		return err

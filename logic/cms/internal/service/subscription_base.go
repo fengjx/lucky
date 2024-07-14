@@ -79,9 +79,11 @@ func (svc subscriptionBaseService) BatchUpdate(ctx context.Context, param *types
 // DeleteByIDs 批量更新
 func (svc subscriptionBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
-	_, err := dao.CmsSubscriptionDao.DeleteByCondContext(ctx, ql.C().And(
-		meta.CmsSubscriptionMeta.IdIn(ids...),
-	))
+	_, err := dao.CmsSubscriptionDao.Deleter().Where(
+		ql.C(
+			meta.CmsSubscriptionMeta.IdIn(ids...),
+		),
+	).ExecContext(ctx)
 	if err != nil {
 		l.Error("delete cms_subscription err", zap.Error(err))
 		return err

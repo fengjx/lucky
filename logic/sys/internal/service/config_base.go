@@ -44,8 +44,10 @@ func (svc configBaseService) Query(ctx context.Context, query *daox.QueryRecord)
 // Add 新增记录
 func (svc configBaseService) Add(ctx context.Context, model *entity.SysConfig) (int64, error) {
 	return dao.SysConfigDao.SaveContext(ctx, model,
-		meta.SysConfigMeta.Ctime,
-		meta.SysConfigMeta.Utime,
+		daox.WithInsertOmits(
+			meta.SysConfigMeta.Ctime,
+			meta.SysConfigMeta.Utime,
+		),
 	)
 }
 
@@ -84,9 +86,9 @@ func (svc configBaseService) BatchUpdate(ctx context.Context, param *types.Batch
 // DeleteByIDs 批量更新
 func (svc configBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
-	_, err := dao.SysConfigDao.DeleteByCondContext(ctx, ql.C().And(
-		meta.SysConfigMeta.IdIn(ids...),
-	))
+	_, err := dao.SysConfigDao.Deleter().
+		Where(ql.C(meta.SysConfigMeta.IdIn(ids...))).
+		ExecContext(ctx)
 	if err != nil {
 		l.Error("delete sys_config err", zap.Error(err))
 		return err

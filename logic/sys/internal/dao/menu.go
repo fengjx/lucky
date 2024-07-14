@@ -31,15 +31,16 @@ func newSysMenuDao() *sysMenuDao {
 // ListChildren 查询所有子菜单
 func (dao sysMenuDao) ListChildren(ctx context.Context, status []enum.MenuStatus, parentIDs ...int64) (map[int64][]*entity.SysMenu, error) {
 	var list []*entity.SysMenu
-	selector := dao.Selector().Where(
-		ql.C(
-			meta.SysMenuMeta.StatusIn(lo.Map[enum.MenuStatus, string](status, func(item enum.MenuStatus, index int) string {
-				return string(item)
-			})...),
-			meta.SysMenuMeta.ParentIdIn(parentIDs...),
-		),
-	).OrderBy(meta.SysMenuMeta.SortNoAsc())
-	err := dao.SelectContext(ctx, &list, selector)
+	err := dao.Selector().
+		Where(
+			ql.C(
+				meta.SysMenuMeta.StatusIn(lo.Map[enum.MenuStatus, string](status, func(item enum.MenuStatus, index int) string {
+					return string(item)
+				})...),
+				meta.SysMenuMeta.ParentIdIn(parentIDs...),
+			),
+		).OrderBy(meta.SysMenuMeta.SortNoAsc()).
+		SelectContext(ctx, &list)
 	if err != nil {
 		return nil, err
 	}

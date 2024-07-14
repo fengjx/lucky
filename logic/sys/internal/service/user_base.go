@@ -94,9 +94,9 @@ func (svc userBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 // DeleteByIDs 批量更新
 func (svc userBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
-	_, err := dao.SysUserDao.DeleteByCondContext(ctx, ql.C().And(
-		meta.SysUserMeta.IdIn(ids...),
-	))
+	_, err := dao.SysUserDao.Deleter().Where(
+		ql.C(meta.SysUserMeta.IdIn(ids...)),
+	).ExecContext(ctx)
 	if err != nil {
 		l.Error("delete user err", zap.Error(err))
 		return err

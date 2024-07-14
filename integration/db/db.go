@@ -25,6 +25,7 @@ func init() {
 		db, err := sqlx.Open(c.Type, c.Dsn)
 		if err != nil {
 			log.Panicf("create db connection err - %s, %s, %s", c.Type, c.Dsn, err.Error())
+			return
 		}
 		err = db.Ping()
 		if err != nil {

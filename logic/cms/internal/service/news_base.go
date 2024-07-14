@@ -81,9 +81,11 @@ func (svc newsBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 // DeleteByIDs 批量更新
 func (svc newsBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
-	_, err := dao.CmsNewsDao.DeleteByCondContext(ctx, ql.C().And(
-		meta.CmsNewsMeta.IdIn(ids...),
-	))
+	_, err := dao.CmsNewsDao.Deleter().Where(
+		ql.C(
+			meta.CmsNewsMeta.IdIn(ids...),
+		),
+	).ExecContext(ctx)
 	if err != nil {
 		l.Error("delete cms_news err", zap.Error(err))
 		return err

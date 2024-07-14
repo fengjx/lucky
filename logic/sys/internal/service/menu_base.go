@@ -122,10 +122,12 @@ func (svc menuBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 // DeleteByIDs 批量更新
 func (svc menuBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
-	_, err := dao.SysMenuDao.DeleteByCondContext(ctx, ql.C().And(
-		meta.SysMenuMeta.IdIn(ids...),
-		meta.SysMenuMeta.IsSysNotEQ(1),
-	))
+	_, err := dao.SysMenuDao.Deleter().Where(
+		ql.C(
+			meta.SysMenuMeta.IdIn(ids...),
+			meta.SysMenuMeta.IsSysNotEQ(1),
+		),
+	).ExecContext(ctx)
 	if err != nil {
 		l.Error("delete sys_menu err", zap.Error(err))
 		return err

@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/fengjx/daox"
+	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
 	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/luchen/log"
-	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/fengjx/lucky/connom/types"
@@ -67,8 +67,8 @@ func (svc configBaseService) BatchUpdate(ctx context.Context, param *types.Batch
 			}
 			attr[k] = v
 		}
-		err := db.GetDefaultTxManager().ExecTx(ctx, func(txCtx context.Context, tx *sqlx.Tx) error {
-			_, err := dao.SysConfigDao.UpdateFieldTxContext(txCtx, tx, id, attr)
+		err := db.GetDefaultTxManager().ExecTx(ctx, func(txCtx context.Context, executor engine.Executor) error {
+			_, err := dao.SysConfigDao.WithExecutor(executor).UpdateFieldContext(txCtx, id, attr)
 			return err
 		})
 		if err != nil {

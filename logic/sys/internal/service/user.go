@@ -19,7 +19,7 @@ type userService struct {
 
 func (svc userService) GetByUsername(ctx context.Context, username string) (*entity.SysUser, error) {
 	user := &entity.SysUser{}
-	ok, err := dao.SysUserDao.GetByColumn(daox.OfKv(meta.SysUserMeta.Username, username), user)
+	ok, err := dao.SysUserDao.GetByColumnContext(ctx, daox.OfKv(meta.SysUserMeta.Username, username), user)
 	if err != nil {
 		log.ErrorCtx(ctx, "get user by username err", zap.Error(err))
 		return nil, err

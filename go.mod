@@ -3,7 +3,7 @@ module github.com/fengjx/lucky
 go 1.22
 
 require (
-	github.com/fengjx/daox v1.1.0-rc12
+	github.com/fengjx/daox v1.1.0-rc13
 	github.com/fengjx/go-halo v0.1.1-rc01
 	github.com/fengjx/luchen v1.0.5-rc12
 	github.com/go-kit/kit v0.13.0

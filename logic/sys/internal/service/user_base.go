@@ -5,11 +5,11 @@ import (
 	"strings"
 
 	"github.com/fengjx/daox"
+	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
 	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen/log"
-	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/fengjx/lucky/connom/kit"
@@ -80,8 +80,8 @@ func (svc userBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 			}
 			attr[k] = v
 		}
-		err := db.GetDefaultTxManager().ExecTx(ctx, func(txCtx context.Context, tx *sqlx.Tx) error {
-			_, err := dao.SysUserDao.UpdateFieldTxContext(txCtx, tx, id, attr)
+		err := db.GetDefaultTxManager().ExecTx(ctx, func(txCtx context.Context, executor engine.Executor) error {
+			_, err := dao.SysUserDao.WithExecutor(executor).UpdateFieldContext(txCtx, id, attr)
 			return err
 		})
 		if err != nil {
@@ -94,9 +94,9 @@ func (svc userBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 // DeleteByIDs 批量更新
 func (svc userBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
-	_, err := dao.SysUserDao.DeleteByCondContext(ctx, ql.C().And(
-		meta.SysUserMeta.IdIn(ids...),
-	))
+	_, err := dao.SysUserDao.Deleter().Where(
+		ql.C(meta.SysUserMeta.IdIn(ids...)),
+	).ExecContext(ctx)
 	if err != nil {
 		l.Error("delete user err", zap.Error(err))
 		return err

@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/fengjx/daox"
+	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
 	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/luchen/log"
-	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/fengjx/lucky/connom/types"
@@ -67,8 +67,8 @@ func (svc dictBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 			}
 			attr[k] = v
 		}
-		err := db.GetDefaultTxManager().ExecTx(ctx, func(txCtx context.Context, tx *sqlx.Tx) error {
-			_, err := dao.SysDictDao.UpdateFieldTxContext(txCtx, tx, id, attr)
+		err := db.GetDefaultTxManager().ExecTx(ctx, func(txCtx context.Context, executor engine.Executor) error {
+			_, err := dao.SysDictDao.WithExecutor(executor).UpdateFieldContext(txCtx, id, attr)
 			return err
 		})
 		if err != nil {
@@ -81,9 +81,9 @@ func (svc dictBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 // DeleteByIDs 批量更新
 func (svc dictBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
-	_, err := dao.SysDictDao.DeleteByCondContext(ctx, ql.C().And(
-		meta.SysDictMeta.IdIn(ids...),
-	))
+	_, err := dao.SysDictDao.Deleter().
+		Where(ql.C(meta.SysDictMeta.IdIn(ids...))).
+		ExecContext(ctx)
 	if err != nil {
 		l.Error("delete sys_dict err", zap.Error(err))
 		return err

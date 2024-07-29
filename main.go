@@ -9,6 +9,7 @@ import (
 	"github.com/fengjx/luchen"
 	"github.com/fengjx/luchen/log"
 
+	"github.com/fengjx/lucky/integration"
 	"github.com/fengjx/lucky/logic"
 	"github.com/fengjx/lucky/transport/http"
 )
@@ -16,6 +17,7 @@ import (
 func main() {
 	ctx := context.Background()
 	httpServer := http.GetServer()
+	integration.Init()
 	logic.Init(ctx, httpServer)
 	luchen.Start(httpServer)
 

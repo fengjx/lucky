@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/fengjx/daox"
+	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
 	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen/log"
-	"github.com/jmoiron/sqlx"
 	"github.com/samber/lo"
 	"go.uber.org/zap"
 
@@ -108,8 +108,8 @@ func (svc menuBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 			}
 			attr[k] = v
 		}
-		err := db.GetDefaultTxManager().ExecTx(ctx, func(txCtx context.Context, tx *sqlx.Tx) error {
-			_, err := dao.SysMenuDao.UpdateFieldTxContext(txCtx, tx, id, attr)
+		err := db.GetDefaultTxManager().ExecTx(ctx, func(txCtx context.Context, executor engine.Executor) error {
+			_, err := dao.SysMenuDao.WithExecutor(executor).UpdateFieldContext(txCtx, id, attr)
 			return err
 		})
 		if err != nil {
@@ -122,10 +122,12 @@ func (svc menuBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 // DeleteByIDs 批量更新
 func (svc menuBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
-	_, err := dao.SysMenuDao.DeleteByCondContext(ctx, ql.C().And(
-		meta.SysMenuMeta.IdIn(ids...),
-		meta.SysMenuMeta.IsSysNotEQ(1),
-	))
+	_, err := dao.SysMenuDao.Deleter().Where(
+		ql.C(
+			meta.SysMenuMeta.IdIn(ids...),
+			meta.SysMenuMeta.IsSysNotEQ(1),
+		),
+	).ExecContext(ctx)
 	if err != nil {
 		l.Error("delete sys_menu err", zap.Error(err))
 		return err

@@ -29,11 +29,10 @@ func newSysConfigDao() *sysConfigDao {
 
 // ListAll 查询所有生效配置
 func (dao sysConfigDao) ListAll(ctx context.Context) ([]*entity.SysConfig, error) {
-	selector := dao.Selector().Where(ql.C().And(
-		ql.Col(meta.SysUserMeta.Status).EQ(enum.ConfigStatusNormal),
-	))
 	var list []*entity.SysConfig
-	err := dao.SelectContext(ctx, &list, selector)
+	err := dao.Selector().
+		Where(ql.C(ql.Col(meta.SysUserMeta.Status).EQ(enum.ConfigStatusNormal))).
+		SelectContext(ctx, &list)
 	if err != nil {
 		return nil, err
 	}

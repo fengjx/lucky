@@ -3,19 +3,20 @@ module github.com/fengjx/lucky
 go 1.22
 
 require (
-	github.com/fengjx/daox v1.1.0-rc04
+	github.com/fengjx/daox v1.1.0-rc13
 	github.com/fengjx/go-halo v0.1.1-rc01
 	github.com/fengjx/luchen v1.0.5-rc12
 	github.com/go-kit/kit v0.13.0
-	github.com/go-sql-driver/mysql v1.7.1
+	github.com/go-sql-driver/mysql v1.8.1
 	github.com/golang-jwt/jwt/v5 v5.2.0
-	github.com/jmoiron/sqlx v1.3.5
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/magiconair/properties v1.8.7
 	github.com/samber/lo v1.38.1
 	go.uber.org/zap v1.26.0
 )
 
 require (
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect

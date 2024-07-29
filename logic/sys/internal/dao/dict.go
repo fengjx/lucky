@@ -29,11 +29,10 @@ func newSysDictDao() *sysDictDao {
 
 // ListAll 查询所有生效数据字典
 func (dao sysDictDao) ListAll(ctx context.Context) ([]*entity.SysDict, error) {
-	selector := dao.Selector().Where(ql.C().And(
-		ql.Col(meta.SysUserMeta.Status).EQ(enum.DictStatusNormal),
-	))
 	var list []*entity.SysDict
-	err := dao.SelectContext(ctx, &list, selector)
+	err := dao.Selector().
+		Where(ql.C(ql.Col(meta.SysUserMeta.Status).EQ(enum.DictStatusNormal))).
+		SelectContext(ctx, &list)
 	if err != nil {
 		return nil, err
 	}

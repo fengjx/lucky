@@ -6,7 +6,7 @@ import (
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
-	"github.com/fengjx/go-halo/json"
+	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
@@ -28,8 +28,7 @@ func (svc newsBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 	query.TableName = meta.CmsNewsMeta.TableName()
 	list, page, err := daox.Find[entity.CmsNews](ctx, readDB, *query)
 	if err != nil {
-		log.ErrorCtx(ctx, "page query cms_news err", zap.Any("query", json.ToJsonDelay(query)), zap.Error(err))
-		return nil, err
+		return nil, errs.Wrap(err, "page query cms_news err")
 	}
 	pageVO := &types.PageVO[entity.CmsNews]{
 		List:    list,
@@ -87,7 +86,6 @@ func (svc newsBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 		),
 	).ExecContext(ctx)
 	if err != nil {
-		l.Error("delete cms_news err", zap.Error(err))
 		return err
 	}
 	l.Info("delete cms_news success")

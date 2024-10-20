@@ -18,7 +18,7 @@ func init() {
 	configArg := flag.String("c", "", "custom config file path")
 	flag.Parse()
 	appCfg := "conf/app.yml"
-	if !env.IsLocal() {
+	if !env.IsDev() {
 		exePath, err := os.Executable()
 		if err != nil {
 			log.Panic("can not get exec file path", zap.Error(err))

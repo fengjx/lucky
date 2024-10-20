@@ -6,7 +6,6 @@ import (
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
-	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
@@ -28,7 +27,6 @@ func (svc dictBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 	query.TableName = meta.SysDictMeta.TableName()
 	list, page, err := daox.Find[entity.SysDict](ctx, readDB, *query)
 	if err != nil {
-		log.ErrorCtx(ctx, "page query sys_dict err", zap.Any("query", json.ToJsonDelay(query)), zap.Error(err))
 		return nil, err
 	}
 	pageVO := &types.PageVO[entity.SysDict]{
@@ -85,7 +83,6 @@ func (svc dictBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 		Where(ql.C(meta.SysDictMeta.IdIn(ids...))).
 		ExecContext(ctx)
 	if err != nil {
-		l.Error("delete sys_dict err", zap.Error(err))
 		return err
 	}
 	l.Info("delete sys_dict success")

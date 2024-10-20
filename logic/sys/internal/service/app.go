@@ -1,13 +1,12 @@
 package service
 
 import (
-	"context"
 	"os"
 	"strings"
 
+	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/go-halo/fskit"
 	"github.com/fengjx/luchen/log"
-	"go.uber.org/zap"
 
 	"github.com/fengjx/lucky/integration/db"
 )
@@ -17,16 +16,14 @@ var AppSvc = &appService{}
 type appService struct {
 }
 
-func (svc appService) Init(ctx context.Context) error {
+func (svc appService) Init() error {
 	initSQLFile, err := fskit.Lookup("conf/init.sql", 5)
 	if err != nil {
-		log.ErrorCtx(ctx, "conf/init.sql not found")
-		return err
+		return errs.Wrap(err, "conf/init.sql not found")
 	}
 	content, err := os.ReadFile(initSQLFile)
 	if err != nil {
-		log.Error("read conf/init.sql err", zap.Error(err))
-		return err
+		return errs.Wrap(err, "read conf/init.sql err")
 	}
 	sqlScript := string(content)
 	scripts := strings.Split(sqlScript, ";")
@@ -37,8 +34,7 @@ func (svc appService) Init(ctx context.Context) error {
 		log.Infof("ecec sql: %s", script)
 		_, err = db.GetDefaultDB().Exec(script)
 		if err != nil {
-			log.Error("exec conf/init.sql err", zap.String("script", script), zap.Error(err))
-			return err
+			return errs.Wrapf(err, "exec conf/init.sql err: %s", script)
 		}
 	}
 	return nil

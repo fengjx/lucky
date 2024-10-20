@@ -6,7 +6,6 @@ import (
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
-	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen/log"
 	"github.com/samber/lo"
@@ -41,7 +40,6 @@ func (svc menuBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 	query.OrderFields = append(query.OrderFields, daox.OrderField{Field: meta.SysMenuMeta.SortNo, OrderType: daox.OrderTypeAsc})
 	list, page, err := daox.Find[*entity.SysMenu](ctx, readDB, *query)
 	if err != nil {
-		log.ErrorCtx(ctx, "page query sys_menu err", zap.Any("query", json.ToJsonDelay(query)), zap.Error(err))
 		return nil, err
 	}
 	var parentIDs []int64
@@ -129,7 +127,6 @@ func (svc menuBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 		),
 	).ExecContext(ctx)
 	if err != nil {
-		l.Error("delete sys_menu err", zap.Error(err))
 		return err
 	}
 	l.Info("delete sys_menu success")

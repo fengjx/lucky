@@ -12,7 +12,7 @@ import (
 
 func main() {
 	ctx := context.Background()
-	sys.InitWithTools(ctx)
+	sys.InitWithTools()
 	err := syspub.AppAPI.Init(ctx)
 	if err != nil {
 		log.Error("install err", zap.Error(err))

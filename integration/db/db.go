@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"strings"
 
 	"github.com/fengjx/daox"
@@ -70,7 +72,7 @@ func GetTxManager(name string) *daox.TxManager {
 }
 
 func printSQL(ctx context.Context, ec *engine.ExecutorContext, er *engine.ExecutorResult) {
-	if er.Err != nil {
+	if er.Err != nil && !errors.Is(er.Err, sql.ErrNoRows) {
 		log.ErrorCtx(ctx, "exec sql",
 			zap.String("sql", ec.SQL),
 			zap.Any("args", ec.Args),

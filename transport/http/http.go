@@ -54,7 +54,6 @@ func ErrorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
 	var errn *luchen.Errno
 	ok := errors.As(err, &errn)
 	if !ok {
-		log.ErrorCtx(ctx, "handler error", zap.Error(err))
 		msg := errno.SystemErr.Msg
 		if !env.IsProd() {
 			msg = err.Error()
@@ -93,6 +92,7 @@ func NewHandler(e luchen.Endpoint,
 
 	options = append(options, httptransport.ServerErrorEncoder(ErrorEncoder))
 	targetEndpoint := middleware.AccessMiddleware(e)
+	targetEndpoint = luchen.LogMiddleware()(e)
 	return luchen.NewHTTPTransportServer(
 		targetEndpoint,
 		dec,

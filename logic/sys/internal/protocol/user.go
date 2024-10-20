@@ -5,12 +5,12 @@ import (
 )
 
 type UserInfo struct {
-	UID      int64  `json:"uid"`
-	Username string `json:"username"`
-	Nickname string `json:"nickname"`
-	Email    string `json:"email"`
-	Avatar   string `json:"avatar"`
-	Phone    string `json:"phone"`
+	UID      int64  `json:"uid,omitempty"`
+	Username string `json:"username,omitempty"`
+	Nickname string `json:"nickname,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Avatar   string `json:"avatar,omitempty"`
+	Phone    string `json:"phone,omitempty"`
 }
 
 func BuildUserInfo(e *entity.SysUser) *UserInfo {

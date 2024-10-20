@@ -6,7 +6,6 @@ import (
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
-	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
@@ -28,7 +27,6 @@ func (svc configBaseService) Query(ctx context.Context, query *daox.QueryRecord)
 	query.TableName = meta.SysConfigMeta.TableName()
 	list, page, err := daox.Find[entity.SysConfig](ctx, readDB, *query)
 	if err != nil {
-		log.ErrorCtx(ctx, "page query sys_config err", zap.Any("query", json.ToJsonDelay(query)), zap.Error(err))
 		return nil, err
 	}
 	pageVO := &types.PageVO[entity.SysConfig]{
@@ -85,7 +83,6 @@ func (svc configBaseService) DeleteByIDs(ctx context.Context, ids []int64) error
 		Where(ql.C(meta.SysConfigMeta.IdIn(ids...))).
 		ExecContext(ctx)
 	if err != nil {
-		l.Error("delete sys_config err", zap.Error(err))
 		return err
 	}
 	l.Info("delete sys_config success")

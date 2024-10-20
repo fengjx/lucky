@@ -7,7 +7,6 @@ import (
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
-	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
@@ -31,7 +30,6 @@ func (svc userBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 	query.TableName = meta.SysUserMeta.TableName()
 	list, page, err := daox.Find[entity.SysUser](ctx, readDB, *query)
 	if err != nil {
-		log.ErrorCtx(ctx, "page query user err", zap.Any("query", json.ToJsonDelay(query)), zap.Error(err))
 		return nil, err
 	}
 	pageVO := &types.PageVO[entity.SysUser]{
@@ -98,7 +96,6 @@ func (svc userBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 		ql.C(meta.SysUserMeta.IdIn(ids...)),
 	).ExecContext(ctx)
 	if err != nil {
-		l.Error("delete user err", zap.Error(err))
 		return err
 	}
 	l.Info("delete user success")
@@ -107,16 +104,15 @@ func (svc userBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 
 // UpdatePwd 修改用户密码
 func (svc userBaseService) UpdatePwd(ctx context.Context, id int64, newPwd string) error {
-	l := log.GetLogger(ctx).With(zap.Any("id", id))
 	pwd, salt := svc.genPwd(newPwd)
 	_, err := dao.SysUserDao.UpdateFieldContext(ctx, id, map[string]any{
 		meta.SysUserMeta.Pwd:  pwd,
 		meta.SysUserMeta.Salt: salt,
 	})
 	if err != nil {
-		l.Error("update sys_user pwd err", zap.Error(err))
+		return err
 	}
-	return err
+	return nil
 }
 
 func (svc userBaseService) genPwd(pwd string) (md5Pwd, salt string) {

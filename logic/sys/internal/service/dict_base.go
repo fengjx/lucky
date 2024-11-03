@@ -22,7 +22,7 @@ type dictBaseService struct {
 }
 
 // Query 分页查询
-func (svc dictBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[entity.SysDict], error) {
+func (s *dictBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[entity.SysDict], error) {
 	readDB := dao.SysDictDao.GetReadDB()
 	query.TableName = meta.SysDictMeta.TableName()
 	list, page, err := daox.Find[entity.SysDict](ctx, readDB, *query)
@@ -40,12 +40,12 @@ func (svc dictBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 }
 
 // Add 新增记录
-func (svc dictBaseService) Add(ctx context.Context, model *entity.SysDict) (int64, error) {
+func (s *dictBaseService) Add(ctx context.Context, model *entity.SysDict) (int64, error) {
 	return dao.SysDictDao.SaveContext(ctx, model)
 }
 
 // Update 更新记录
-func (svc dictBaseService) Update(ctx context.Context, model *entity.SysDict) (bool, error) {
+func (s *dictBaseService) Update(ctx context.Context, model *entity.SysDict) (bool, error) {
 	return dao.SysDictDao.UpdateContext(ctx, model,
 		meta.SysDictMeta.PrimaryKey(),
 		meta.SysDictMeta.Ctime,
@@ -54,7 +54,7 @@ func (svc dictBaseService) Update(ctx context.Context, model *entity.SysDict) (b
 }
 
 // BatchUpdate 批量更新
-func (svc dictBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
+func (s *dictBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
 	for _, row := range param.Rows {
 		var id any
 		attr := map[string]any{}
@@ -77,7 +77,7 @@ func (svc dictBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 }
 
 // DeleteByIDs 批量更新
-func (svc dictBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
+func (s *dictBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
 	_, err := dao.SysDictDao.Deleter().
 		Where(ql.C(meta.SysDictMeta.IdIn(ids...))).

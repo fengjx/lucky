@@ -16,7 +16,7 @@ var AppSvc = &appService{}
 type appService struct {
 }
 
-func (svc appService) Init() error {
+func (s *appService) Init() error {
 	initSQLFile, err := fskit.Lookup("conf/init.sql", 5)
 	if err != nil {
 		return errs.Wrap(err, "conf/init.sql not found")

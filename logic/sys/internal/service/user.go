@@ -16,7 +16,7 @@ var UserSvc = &userService{}
 type userService struct {
 }
 
-func (svc userService) GetByUsername(ctx context.Context, username string) (*entity.SysUser, error) {
+func (s *userService) GetByUsername(ctx context.Context, username string) (*entity.SysUser, error) {
 	user := &entity.SysUser{}
 	ok, err := dao.SysUserDao.GetByColumnContext(ctx, daox.OfKv(meta.SysUserMeta.Username, username), user)
 	if err != nil {

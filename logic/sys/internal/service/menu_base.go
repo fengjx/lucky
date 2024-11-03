@@ -27,7 +27,7 @@ type menuBaseService struct {
 }
 
 // Query 分页查询
-func (svc menuBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[*dto.MenuDTO], error) {
+func (s *menuBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[*dto.MenuDTO], error) {
 	readDB := dao.SysMenuDao.GetReadDB()
 	query.TableName = meta.SysMenuMeta.TableName()
 	// 只查根菜单
@@ -60,7 +60,7 @@ func (svc menuBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 		}
 	}
 
-	menuMap, err := svc.recursiveChildren(ctx, status, parentIDs...)
+	menuMap, err := s.recursiveChildren(ctx, status, parentIDs...)
 	if err != nil {
 		return nil, err
 	}
@@ -78,14 +78,14 @@ func (svc menuBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 }
 
 // Add 新增记录
-func (svc menuBaseService) Add(ctx context.Context, model *entity.SysMenu) (int64, error) {
+func (s *menuBaseService) Add(ctx context.Context, model *entity.SysMenu) (int64, error) {
 	return dao.SysMenuDao.SaveContext(ctx, model,
 		daox.WithInsertOmits(meta.SysMenuMeta.IsSys),
 	)
 }
 
 // Update 更新记录
-func (svc menuBaseService) Update(ctx context.Context, model *entity.SysMenu) (bool, error) {
+func (s *menuBaseService) Update(ctx context.Context, model *entity.SysMenu) (bool, error) {
 	return dao.SysMenuDao.UpdateContext(ctx, model,
 		meta.SysMenuMeta.PrimaryKey(),
 		meta.SysMenuMeta.Ctime,
@@ -95,7 +95,7 @@ func (svc menuBaseService) Update(ctx context.Context, model *entity.SysMenu) (b
 }
 
 // BatchUpdate 批量更新
-func (svc menuBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
+func (s *menuBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
 	for _, row := range param.Rows {
 		var id any
 		attr := map[string]any{}
@@ -118,7 +118,7 @@ func (svc menuBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 }
 
 // DeleteByIDs 批量更新
-func (svc menuBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
+func (s *menuBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
 	_, err := dao.SysMenuDao.Deleter().Where(
 		ql.C(
@@ -134,7 +134,7 @@ func (svc menuBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 }
 
 // TreeList 查询菜单 tree
-func (svc menuBaseService) TreeList(ctx context.Context, status []enum.MenuStatus) ([]*dto.MenuDTO, error) {
+func (s *menuBaseService) TreeList(ctx context.Context, status []enum.MenuStatus) ([]*dto.MenuDTO, error) {
 	rootList, err := dao.SysMenuDao.ListChildren(ctx, status, 0)
 	if err != nil {
 		log.ErrorCtx(ctx, "query root menu list err", zap.Error(err))
@@ -149,7 +149,7 @@ func (svc menuBaseService) TreeList(ctx context.Context, status []enum.MenuStatu
 		parentIDs = append(parentIDs, item.ID)
 		return dto.BuildMenuDTO(item)
 	})
-	menuMap, err := svc.recursiveChildren(ctx, status, parentIDs...)
+	menuMap, err := s.recursiveChildren(ctx, status, parentIDs...)
 	if err != nil {
 		log.ErrorCtx(ctx, "recursive query menu children err", zap.Error(err))
 		return nil, err
@@ -161,7 +161,7 @@ func (svc menuBaseService) TreeList(ctx context.Context, status []enum.MenuStatu
 }
 
 // 递归获取子菜单
-func (svc menuBaseService) recursiveChildren(ctx context.Context, status []enum.MenuStatus, parentIDs ...int64) (map[int64][]*dto.MenuDTO, error) {
+func (s *menuBaseService) recursiveChildren(ctx context.Context, status []enum.MenuStatus, parentIDs ...int64) (map[int64][]*dto.MenuDTO, error) {
 	if len(parentIDs) == 0 {
 		return nil, nil
 	}
@@ -180,7 +180,7 @@ func (svc menuBaseService) recursiveChildren(ctx context.Context, status []enum.
 			pids = append(pids, menu.ID)
 			dtos = append(dtos, dto.BuildMenuDTO(menu))
 		}
-		rChildren, err := svc.recursiveChildren(ctx, status, pids...)
+		rChildren, err := s.recursiveChildren(ctx, status, pids...)
 		if err != nil {
 			return nil, err
 		}

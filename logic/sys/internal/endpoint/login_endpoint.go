@@ -4,9 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/luchen"
-	"github.com/fengjx/luchen/log"
-	"go.uber.org/zap"
 
 	"github.com/fengjx/lucky/connom/auth"
 	"github.com/fengjx/lucky/connom/errno"
@@ -25,18 +24,12 @@ type loginEndpoint struct {
 func (e loginEndpoint) makeLoginEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*protocol.LoginReq)
-		l := log.GetLogger(ctx).With(zap.String("username", req.Username))
 		user, err := service.UserSvc.GetByUsername(ctx, req.Username)
 		if err != nil {
-			l.Error("user login err",
-				zap.String("username", req.Username),
-				zap.Error(err),
-			)
-			return nil, err
+			return nil, errs.Wrap(err, "user login err")
 		}
 		if user == nil {
-			l.Warn("user not exist", zap.String("username", req.Username))
-			return nil, errno.UserNotExistErr
+			return nil, errs.WithStack(errno.UserNotExistErr)
 		}
 		if !checkPassword(user, req.Password) {
 			return nil, errno.PasswordErr
@@ -45,8 +38,7 @@ func (e loginEndpoint) makeLoginEndpoint() luchen.Endpoint {
 			UID: user.ID,
 		})
 		if err != nil {
-			l.Error("gen token err", zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "gen token err")
 		}
 		resp := &protocol.LoginResp{
 			Token: token,
@@ -61,8 +53,7 @@ func (e loginEndpoint) makeUserInfoEndpoint() luchen.Endpoint {
 		uid := current.UID(ctx)
 		user, err := service.UserBaseSvc.Get(ctx, uid)
 		if err != nil {
-			log.ErrorCtx(ctx, "get user_info err", zap.Int64("uid", uid), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "get user_info err")
 		}
 		resp := &protocol.UserInfoResp{
 			UserInfo: protocol.BuildUserInfo(user),

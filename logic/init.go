@@ -1,15 +1,13 @@
 package logic
 
 import (
-	"context"
-
 	"github.com/fengjx/luchen"
 
 	"github.com/fengjx/lucky/connom/lifecycle"
 	"github.com/fengjx/lucky/logic/sys"
 )
 
-func Init(ctx context.Context, httpServer *luchen.HTTPServer) {
-	sys.Init(ctx, httpServer)
+func Init(httpServer *luchen.HTTPServer) {
+	sys.Init(httpServer)
 	lifecycle.DoHooks()
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
-	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
@@ -23,12 +22,11 @@ type dictBaseService struct {
 }
 
 // Query 分页查询
-func (svc dictBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[entity.SysDict], error) {
+func (s *dictBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[entity.SysDict], error) {
 	readDB := dao.SysDictDao.GetReadDB()
 	query.TableName = meta.SysDictMeta.TableName()
 	list, page, err := daox.Find[entity.SysDict](ctx, readDB, *query)
 	if err != nil {
-		log.ErrorCtx(ctx, "page query sys_dict err", zap.Any("query", json.ToJsonDelay(query)), zap.Error(err))
 		return nil, err
 	}
 	pageVO := &types.PageVO[entity.SysDict]{
@@ -42,12 +40,12 @@ func (svc dictBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 }
 
 // Add 新增记录
-func (svc dictBaseService) Add(ctx context.Context, model *entity.SysDict) (int64, error) {
+func (s *dictBaseService) Add(ctx context.Context, model *entity.SysDict) (int64, error) {
 	return dao.SysDictDao.SaveContext(ctx, model)
 }
 
 // Update 更新记录
-func (svc dictBaseService) Update(ctx context.Context, model *entity.SysDict) (bool, error) {
+func (s *dictBaseService) Update(ctx context.Context, model *entity.SysDict) (bool, error) {
 	return dao.SysDictDao.UpdateContext(ctx, model,
 		meta.SysDictMeta.PrimaryKey(),
 		meta.SysDictMeta.Ctime,
@@ -56,7 +54,7 @@ func (svc dictBaseService) Update(ctx context.Context, model *entity.SysDict) (b
 }
 
 // BatchUpdate 批量更新
-func (svc dictBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
+func (s *dictBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
 	for _, row := range param.Rows {
 		var id any
 		attr := map[string]any{}
@@ -79,13 +77,12 @@ func (svc dictBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 }
 
 // DeleteByIDs 批量更新
-func (svc dictBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
+func (s *dictBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
 	_, err := dao.SysDictDao.Deleter().
 		Where(ql.C(meta.SysDictMeta.IdIn(ids...))).
 		ExecContext(ctx)
 	if err != nil {
-		l.Error("delete sys_dict err", zap.Error(err))
 		return err
 	}
 	l.Info("delete sys_dict success")

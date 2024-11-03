@@ -5,10 +5,9 @@ import (
 	"strconv"
 
 	"github.com/fengjx/daox"
+	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen"
-	"github.com/fengjx/luchen/log"
-	"go.uber.org/zap"
 
 	"github.com/fengjx/lucky/connom/types"
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
@@ -26,8 +25,7 @@ func (e userAdminEndpoint) makeAddEndpoint() luchen.Endpoint {
 		param := request.(*entity.SysUser)
 		id, err := service.UserBaseSvc.Add(ctx, param)
 		if err != nil {
-			log.ErrorCtx(ctx, "add user err", zap.Any("param", param), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "add user err")
 		}
 		response = types.AddRsp{
 			ID: id,
@@ -41,8 +39,7 @@ func (e userAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
 		param := request.(*entity.SysUser)
 		ok, err := service.UserBaseSvc.Update(ctx, param)
 		if err != nil {
-			log.ErrorCtx(ctx, "update user err", zap.Any("param", param), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "update user err")
 		}
 		response = types.OKRsp{
 			Success: ok,
@@ -64,7 +61,7 @@ func (e userAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
 		})
 		err = service.UserBaseSvc.DeleteByIDs(ctx, ids)
 		if err != nil {
-			return nil, err
+			return nil, errs.Wrap(err, "delete user err")
 		}
 		return
 	}
@@ -75,8 +72,7 @@ func (e userAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
 		param := request.(*types.BatchUpdate)
 		ok, err := service.UserBaseSvc.BatchUpdate(ctx, param)
 		if err != nil {
-			log.ErrorCtx(ctx, "batch update user err", zap.Any("param", param), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "batch update user err")
 		}
 		response = types.OKRsp{
 			Success: ok,
@@ -90,8 +86,7 @@ func (e userAdminEndpoint) makeQueryEndpoint() luchen.Endpoint {
 		query := request.(*daox.QueryRecord)
 		pageVO, err := service.UserBaseSvc.Query(ctx, query)
 		if err != nil {
-			log.ErrorCtx(ctx, "page query user err", zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "page query user err")
 		}
 		return pageVO.ToAmisResp(), nil
 	}

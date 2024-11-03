@@ -33,10 +33,10 @@ func DoHooks() {
 	hook.DoHooks(InitData.HookName)
 }
 
-func AddHook(l lifecycle, handler func(), opts ...hook.Option) {
-	AddHookWithOrder(l, l.Order, handler, opts...)
+func AddHook(l lifecycle, handler func()) {
+	AddHookWithOrder(l, l.Order, handler)
 }
 
-func AddHookWithOrder(l lifecycle, order int, handler func(), opts ...hook.Option) {
-	hook.AddHook(l.HookName, order, handler, opts...)
+func AddHookWithOrder(l lifecycle, order int, handler func()) {
+	hook.AddHook(l.HookName, order, handler)
 }

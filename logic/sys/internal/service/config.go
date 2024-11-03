@@ -24,7 +24,7 @@ func newConfigService() *configService {
 	return inst
 }
 
-func (svc *configService) Refresh(ctx context.Context) {
+func (s *configService) Refresh(ctx context.Context) {
 	list, err := dao.SysConfigDao.ListAll(ctx)
 	if err != nil {
 		log.ErrorCtx(ctx, "list all sys_config err", zap.Error(err))
@@ -34,18 +34,18 @@ func (svc *configService) Refresh(ctx context.Context) {
 	for _, item := range list {
 		configMap[item.Scope] = append(configMap[item.Scope], dto.BuildConfigDTO(item))
 	}
-	svc.configMap = configMap
+	s.configMap = configMap
 	log.InfofCtx(ctx, "refresh sys_config, size: %d", len(list))
 }
 
-func (svc *configService) ScopeConfig(scopes ...string) map[string][]*syspub.ConfigDTO {
+func (s *configService) ScopeConfig(scopes ...string) map[string][]*syspub.ConfigDTO {
 	res := map[string][]*syspub.ConfigDTO{}
 	for _, scope := range scopes {
-		res[scope] = svc.configMap[scope]
+		res[scope] = s.configMap[scope]
 	}
 	return res
 }
 
-func (svc *configService) GetAllConfig() map[string][]*syspub.ConfigDTO {
-	return svc.configMap
+func (s *configService) GetAllConfig() map[string][]*syspub.ConfigDTO {
+	return s.configMap
 }

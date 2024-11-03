@@ -5,10 +5,9 @@ import (
 	"strconv"
 
 	"github.com/fengjx/daox"
+	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen"
-	"github.com/fengjx/luchen/log"
-	"go.uber.org/zap"
 
 	"github.com/fengjx/lucky/connom/types"
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
@@ -25,8 +24,7 @@ func (e configAdminEndpoint) makeAddEndpoint() luchen.Endpoint {
 		param := request.(*entity.SysConfig)
 		id, err := service.ConfigBaseSvc.Add(ctx, param)
 		if err != nil {
-			log.ErrorCtx(ctx, "add sys_config err", zap.Any("param", param), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "add sys_config err")
 		}
 		response = types.AddRsp{
 			ID: id,
@@ -40,8 +38,7 @@ func (e configAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
 		param := request.(*entity.SysConfig)
 		ok, err := service.ConfigBaseSvc.Update(ctx, param)
 		if err != nil {
-			log.ErrorCtx(ctx, "update sys_config err", zap.Any("param", param), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "update sys_config err")
 		}
 		response = types.OKRsp{
 			Success: ok,
@@ -63,7 +60,7 @@ func (e configAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
 		})
 		err = service.ConfigBaseSvc.DeleteByIDs(ctx, ids)
 		if err != nil {
-			return nil, err
+			return nil, errs.Wrap(err, "delete sys_config err")
 		}
 		return
 	}
@@ -74,8 +71,7 @@ func (e configAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
 		param := request.(*types.BatchUpdate)
 		ok, err := service.ConfigBaseSvc.BatchUpdate(ctx, param)
 		if err != nil {
-			log.ErrorCtx(ctx, "batch update sys_config err", zap.Any("param", param), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "batch update sys_config err")
 		}
 		response = types.OKRsp{
 			Success: ok,
@@ -89,8 +85,7 @@ func (e configAdminEndpoint) makeQueryEndpoint() luchen.Endpoint {
 		query := request.(*daox.QueryRecord)
 		pageVO, err := service.ConfigBaseSvc.Query(ctx, query)
 		if err != nil {
-			log.ErrorCtx(ctx, "page query sys_config err", zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "page query sys_config err")
 		}
 		return pageVO.ToAmisResp(), nil
 	}

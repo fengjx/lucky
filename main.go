@@ -1,13 +1,12 @@
 package main
 
 import (
-	"context"
-	"os"
-	"os/signal"
-	"syscall"
+	"time"
 
+	"github.com/fengjx/go-halo/halo"
 	"github.com/fengjx/luchen"
 	"github.com/fengjx/luchen/log"
+	"go.uber.org/zap"
 
 	"github.com/fengjx/lucky/integration"
 	"github.com/fengjx/lucky/logic"
@@ -15,16 +14,13 @@ import (
 )
 
 func main() {
-	ctx := context.Background()
 	httpServer := http.GetServer()
 	integration.Init()
-	logic.Init(ctx, httpServer)
+	logic.Init(httpServer)
 	luchen.Start(httpServer)
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
-
-	<-quit
-	log.Info("server shutdown")
-	luchen.Stop()
+	if err := halo.Wait(time.Second * 30); err != nil {
+		log.Info("server shutdown err", zap.Error(err))
+		return
+	}
 }

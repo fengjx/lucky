@@ -7,7 +7,6 @@ import (
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
-	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
@@ -26,12 +25,11 @@ type userBaseService struct {
 }
 
 // Query 分页查询
-func (svc userBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[entity.SysUser], error) {
+func (s *userBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[entity.SysUser], error) {
 	readDB := dao.SysUserDao.GetReadDB()
 	query.TableName = meta.SysUserMeta.TableName()
 	list, page, err := daox.Find[entity.SysUser](ctx, readDB, *query)
 	if err != nil {
-		log.ErrorCtx(ctx, "page query user err", zap.Any("query", json.ToJsonDelay(query)), zap.Error(err))
 		return nil, err
 	}
 	pageVO := &types.PageVO[entity.SysUser]{
@@ -45,15 +43,15 @@ func (svc userBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 }
 
 // Add 新增记录
-func (svc userBaseService) Add(ctx context.Context, sysUser *entity.SysUser) (int64, error) {
-	md5Pwd, salt := svc.genPwd(sysUser.Pwd)
+func (s *userBaseService) Add(ctx context.Context, sysUser *entity.SysUser) (int64, error) {
+	md5Pwd, salt := s.genPwd(sysUser.Pwd)
 	sysUser.Salt = salt
 	sysUser.Pwd = md5Pwd
 	return dao.SysUserDao.SaveContext(ctx, sysUser)
 }
 
 // Update 更新记录
-func (svc userBaseService) Update(ctx context.Context, sysUser *entity.SysUser) (bool, error) {
+func (s *userBaseService) Update(ctx context.Context, sysUser *entity.SysUser) (bool, error) {
 	return dao.SysUserDao.UpdateContext(ctx, sysUser,
 		meta.SysUserMeta.PrimaryKey(),
 		meta.SysUserMeta.Pwd,
@@ -64,7 +62,7 @@ func (svc userBaseService) Update(ctx context.Context, sysUser *entity.SysUser) 
 }
 
 // BatchUpdate 批量更新
-func (svc userBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
+func (s *userBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
 	for _, row := range param.Rows {
 		var id any
 		attr := map[string]any{}
@@ -74,7 +72,7 @@ func (svc userBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 				continue
 			}
 			if k == meta.SysUserMeta.Pwd {
-				md5Pwd, salt := svc.genPwd(v.(string))
+				md5Pwd, salt := s.genPwd(v.(string))
 				v = md5Pwd
 				attr[meta.SysUserMeta.Salt] = salt
 			}
@@ -92,13 +90,12 @@ func (svc userBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 }
 
 // DeleteByIDs 批量更新
-func (svc userBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
+func (s *userBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
 	_, err := dao.SysUserDao.Deleter().Where(
 		ql.C(meta.SysUserMeta.IdIn(ids...)),
 	).ExecContext(ctx)
 	if err != nil {
-		l.Error("delete user err", zap.Error(err))
 		return err
 	}
 	l.Info("delete user success")
@@ -106,20 +103,19 @@ func (svc userBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 }
 
 // UpdatePwd 修改用户密码
-func (svc userBaseService) UpdatePwd(ctx context.Context, id int64, newPwd string) error {
-	l := log.GetLogger(ctx).With(zap.Any("id", id))
-	pwd, salt := svc.genPwd(newPwd)
+func (s *userBaseService) UpdatePwd(ctx context.Context, id int64, newPwd string) error {
+	pwd, salt := s.genPwd(newPwd)
 	_, err := dao.SysUserDao.UpdateFieldContext(ctx, id, map[string]any{
 		meta.SysUserMeta.Pwd:  pwd,
 		meta.SysUserMeta.Salt: salt,
 	})
 	if err != nil {
-		l.Error("update sys_user pwd err", zap.Error(err))
+		return err
 	}
-	return err
+	return nil
 }
 
-func (svc userBaseService) genPwd(pwd string) (md5Pwd, salt string) {
+func (s *userBaseService) genPwd(pwd string) (md5Pwd, salt string) {
 	if pwd == "" {
 		return
 	}
@@ -131,7 +127,7 @@ func (svc userBaseService) genPwd(pwd string) (md5Pwd, salt string) {
 	return
 }
 
-func (svc userBaseService) Get(ctx context.Context, uid int64) (*entity.SysUser, error) {
+func (s *userBaseService) Get(ctx context.Context, uid int64) (*entity.SysUser, error) {
 	if uid == 0 {
 		return nil, nil
 	}

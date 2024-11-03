@@ -5,10 +5,9 @@ import (
 	"strconv"
 
 	"github.com/fengjx/daox"
+	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen"
-	"github.com/fengjx/luchen/log"
-	"go.uber.org/zap"
 
 	"github.com/fengjx/lucky/connom/types"
 	"github.com/fengjx/lucky/logic/sys/internal/data/dto"
@@ -28,8 +27,7 @@ func (e sysMenuAdminEndpoint) makeAddEndpoint() luchen.Endpoint {
 		param := request.(*entity.SysMenu)
 		id, err := service.MenuBaseSvc.Add(ctx, param)
 		if err != nil {
-			log.ErrorCtx(ctx, "add sys_menu err", zap.Any("param", param), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "add sys_menu err")
 		}
 		response = types.AddRsp{
 			ID: id,
@@ -43,8 +41,7 @@ func (e sysMenuAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
 		param := request.(*entity.SysMenu)
 		ok, err := service.MenuBaseSvc.Update(ctx, param)
 		if err != nil {
-			log.ErrorCtx(ctx, "update sys_menu err", zap.Any("param", param), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "update sys_menu err")
 		}
 		response = types.OKRsp{
 			Success: ok,
@@ -77,8 +74,7 @@ func (e sysMenuAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
 		param := request.(*types.BatchUpdate)
 		ok, err := service.MenuBaseSvc.BatchUpdate(ctx, param)
 		if err != nil {
-			log.ErrorCtx(ctx, "batch update sys_menu err", zap.Any("param", param), zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "batch update sys_menu err")
 		}
 		response = types.OKRsp{
 			Success: ok,
@@ -92,8 +88,7 @@ func (e sysMenuAdminEndpoint) makeQueryEndpoint() luchen.Endpoint {
 		query := request.(*daox.QueryRecord)
 		pageVO, err := service.MenuBaseSvc.Query(ctx, query)
 		if err != nil {
-			log.ErrorCtx(ctx, "page query sys_menu err", zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "page query sys_menu err")
 		}
 		return pageVO.ToAmisResp(), nil
 	}
@@ -122,8 +117,7 @@ func (e sysMenuAdminEndpoint) makeOptionsEndpoint() luchen.Endpoint {
 			enum.MenuStatusDisable,
 		})
 		if err != nil {
-			log.ErrorCtx(ctx, "recursive query menus err", zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "recursive query menus err")
 		}
 		options := []*types.Option{
 			{
@@ -165,8 +159,7 @@ func (e sysMenuAdminEndpoint) makeFetchEndpoint() luchen.Endpoint {
 			enum.MenuStatusNormal,
 		})
 		if err != nil {
-			log.ErrorCtx(ctx, "recursive query menus err", zap.Error(err))
-			return nil, err
+			return nil, errs.Wrap(err, "recursive query menus err")
 		}
 		pages := e.buildMenu(treeList)
 		rsp := protocol.App{

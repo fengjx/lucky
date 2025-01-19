@@ -19,3 +19,6 @@ type OKRsp struct {
 type BatchUpdate struct {
 	Rows []map[string]any `json:"rows"`
 }
+
+type Empty struct {
+}

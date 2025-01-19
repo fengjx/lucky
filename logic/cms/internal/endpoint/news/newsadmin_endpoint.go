@@ -1,20 +1,61 @@
-package endpoint
+package news
 
 import (
 	"context"
+	"reflect"
 	"strconv"
 
 	"github.com/fengjx/daox"
 	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen"
-
-	"github.com/fengjx/lucky/connom/types"
+	"github.com/fengjx/lucky/common/types"
 	"github.com/fengjx/lucky/logic/cms/internal/data/entity"
 	"github.com/fengjx/lucky/logic/cms/internal/service"
 )
 
-var newsAdmin = newsAdminEndpoint{}
+func RegisterNewsAdminTTPHandler(hs *luchen.HTTPServer) {
+	e := &newsAdminEndpoint{}
+	hs.Handle(&luchen.EndpointDefine{
+		Endpoint: e.makeAddEndpoint(),
+		Name:     "NewsAdmin.Add",
+		Path:     "/admin/cms/news/add",
+		ReqType:  reflect.TypeOf(&entity.CmsNews{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "NewsAdmin.Update",
+		Path:     "/admin/cms/news/update",
+		ReqType:  reflect.TypeOf(&entity.CmsNews{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeUpdateEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "NewsAdmin.Del",
+		Path:     "/admin/cms/news/del",
+		ReqType:  reflect.TypeOf(&types.DelReq{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeDelEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "NewsAdmin.BatchUpdate",
+		Path:     "/admin/cms/news/batch-update",
+		ReqType:  reflect.TypeOf(&types.BatchUpdate{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeBatchUpdateEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "NewsAdmin.Query",
+		Path:     "/admin/cms/news/query",
+		ReqType:  reflect.TypeOf(&daox.QueryRecord{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeQueryEndpoint(),
+	})
+}
 
 type newsAdminEndpoint struct {
 }

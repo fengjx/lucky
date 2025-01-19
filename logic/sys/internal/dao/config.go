@@ -7,7 +7,7 @@ import (
 	"github.com/fengjx/daox/sqlbuilder/ql"
 	"github.com/fengjx/go-halo/errs"
 
-	"github.com/fengjx/lucky/connom/kit"
+	"github.com/fengjx/lucky/common/kit"
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
 	"github.com/fengjx/lucky/logic/sys/internal/data/enum"
 	"github.com/fengjx/lucky/logic/sys/internal/data/meta"

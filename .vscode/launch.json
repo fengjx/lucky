@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Server",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/main.go",
+      "env": {
+        "GO111MODULE": "on",
+        "GOPATH": "${env:GOPATH}",
+        "GOROOT": "${env:GOROOT}"
+      },
+      "args": ["-c", "${workspaceFolder}/conf/app-local.yml"],
+      "showLog": true
+    }
+  ]
+}

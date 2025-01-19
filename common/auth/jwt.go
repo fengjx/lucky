@@ -8,9 +8,8 @@ import (
 
 	"github.com/fengjx/go-halo/json"
 	"github.com/fengjx/go-halo/utils"
+	"github.com/fengjx/lucky/common/config"
 	"github.com/golang-jwt/jwt/v5"
-
-	"github.com/fengjx/lucky/connom/config"
 )
 
 var (

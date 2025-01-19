@@ -1,25 +1,66 @@
-package endpoint
+package config
 
 import (
 	"context"
+	"reflect"
 	"strconv"
 
 	"github.com/fengjx/daox"
 	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen"
-
-	"github.com/fengjx/lucky/connom/types"
+	"github.com/fengjx/lucky/common/types"
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
 )
 
-var configAdmin = configAdminEndpoint{}
+func RegisterConfigAdminTTPHandler(hs *luchen.HTTPServer) {
+	e := &configAdminEndpoint{}
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "ConfigAdmin.Add",
+		Path:     "/admin/sys/config/add",
+		ReqType:  reflect.TypeOf(&entity.SysConfig{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeAddEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "ConfigAdmin.Update",
+		Path:     "/admin/sys/config/update",
+		ReqType:  reflect.TypeOf(&entity.SysConfig{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeUpdateEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "ConfigAdmin.Del",
+		Path:     "/admin/sys/config/del",
+		ReqType:  reflect.TypeOf(&types.DelReq{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeDelEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "ConfigAdmin.BatchUpdate",
+		Path:     "/admin/sys/config/batch-update",
+		ReqType:  reflect.TypeOf(&types.BatchUpdate{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeBatchUpdateEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "ConfigAdmin.Query",
+		Path:     "/admin/sys/config/query",
+		ReqType:  reflect.TypeOf(&daox.QueryRecord{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeQueryEndpoint(),
+	})
+}
 
 type configAdminEndpoint struct {
 }
 
-func (e configAdminEndpoint) makeAddEndpoint() luchen.Endpoint {
+func (e *configAdminEndpoint) makeAddEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		param := request.(*entity.SysConfig)
 		id, err := service.ConfigBaseSvc.Add(ctx, param)
@@ -33,7 +74,7 @@ func (e configAdminEndpoint) makeAddEndpoint() luchen.Endpoint {
 	}
 }
 
-func (e configAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
+func (e *configAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		param := request.(*entity.SysConfig)
 		ok, err := service.ConfigBaseSvc.Update(ctx, param)
@@ -66,7 +107,7 @@ func (e configAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
 	}
 }
 
-func (e configAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
+func (e *configAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		param := request.(*types.BatchUpdate)
 		ok, err := service.ConfigBaseSvc.BatchUpdate(ctx, param)
@@ -80,7 +121,7 @@ func (e configAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
 	}
 }
 
-func (e configAdminEndpoint) makeQueryEndpoint() luchen.Endpoint {
+func (e *configAdminEndpoint) makeQueryEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		query := request.(*daox.QueryRecord)
 		pageVO, err := service.ConfigBaseSvc.Query(ctx, query)

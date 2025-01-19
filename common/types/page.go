@@ -1,6 +1,6 @@
 package types
 
-import "github.com/fengjx/lucky/connom/kit"
+import "github.com/fengjx/lucky/common/kit"
 
 type PageVO[T any] struct {
 	List    []T   `json:"list"`

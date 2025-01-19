@@ -10,7 +10,7 @@ import (
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
-	"github.com/fengjx/lucky/connom/types"
+	"github.com/fengjx/lucky/common/types"
 	"github.com/fengjx/lucky/integration/db"
 	"github.com/fengjx/lucky/logic/cms/internal/dao"
 	"github.com/fengjx/lucky/logic/cms/internal/data/entity"

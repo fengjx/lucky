@@ -15,7 +15,7 @@ func TestJwt(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log("token", token)
-	loginPayload, err := Parse(token)
+	loginPayload, _, err := Parse(token)
 	if err != nil {
 		t.Fatal(err)
 	}

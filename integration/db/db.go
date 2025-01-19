@@ -9,13 +9,12 @@ import (
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/luchen/log"
+	"github.com/fengjx/lucky/common/config"
 	_ "github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/reflectx"
-
-	"github.com/fengjx/lucky/connom/config"
 )
 
 var (

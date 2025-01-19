@@ -10,10 +10,16 @@ import (
 
 	"github.com/fengjx/lucky/integration"
 	"github.com/fengjx/lucky/logic"
+	"github.com/fengjx/lucky/middleware"
 	"github.com/fengjx/lucky/transport/http"
 )
 
 func main() {
+	// 注册全局拦截器
+	luchen.UseGlobalHTTPMiddleware(
+		luchen.LogMiddleware,
+		middleware.AccessMiddleware,
+	)
 	httpServer := http.GetServer()
 	integration.Init()
 	logic.Init(httpServer)

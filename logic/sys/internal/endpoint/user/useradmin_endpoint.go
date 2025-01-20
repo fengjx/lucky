@@ -14,6 +14,7 @@ import (
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
 	"github.com/fengjx/lucky/logic/sys/internal/protocol"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
+	"github.com/fengjx/lucky/middleware"
 )
 
 func RegisterUserAdminEndpoint(hs *luchen.HTTPServer) {
@@ -64,6 +65,9 @@ func RegisterUserAdminEndpoint(hs *luchen.HTTPServer) {
 		ReqType:  reflect.TypeOf(&protocol.UpdateUserPwdReq{}),
 		RspType:  reflect.TypeOf(&types.AddRsp{}),
 		Endpoint: e.makeUpdatePwdEndpoint(),
+		Middlewares: []luchen.Middleware{
+			middleware.DemoForbiddenMiddleware,
+		},
 	})
 }
 

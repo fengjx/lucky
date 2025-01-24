@@ -52,7 +52,7 @@ func RegisterConfigAdminTTPHandler(hs *luchen.HTTPServer) {
 		Name:     "ConfigAdmin.Query",
 		Path:     "/admin/sys/config/query",
 		ReqType:  reflect.TypeOf(&daox.QueryRecord{}),
-		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		RspType:  reflect.TypeOf(&types.AmisPageResp[*entity.SysConfig]{}),
 		Endpoint: e.makeQueryEndpoint(),
 	})
 }
@@ -88,7 +88,7 @@ func (e *configAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
 	}
 }
 
-func (e configAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
+func (e *configAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		param := request.(*types.DelReq)
 		res := types.OKRsp{Success: true}

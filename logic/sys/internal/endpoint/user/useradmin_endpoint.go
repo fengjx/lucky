@@ -45,7 +45,7 @@ func RegisterUserAdminEndpoint(hs *luchen.HTTPServer) {
 		Name:     "UserAdmin.BatchUpdate",
 		Path:     "/admin/sys/user/batch-update",
 		ReqType:  reflect.TypeOf(&types.BatchUpdate{}),
-		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		RspType:  reflect.TypeOf(&types.AmisPageResp[*entity.SysUser]{}),
 		Endpoint: e.makeBatchUpdateEndpoint(),
 	})
 
@@ -53,7 +53,7 @@ func RegisterUserAdminEndpoint(hs *luchen.HTTPServer) {
 		Name:     "UserAdmin.Query",
 		Path:     "/admin/sys/user/query",
 		ReqType:  reflect.TypeOf(&daox.QueryRecord{}),
-		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		RspType:  reflect.TypeOf(&types.AmisPageResp[*entity.SysUser]{}),
 		Endpoint: e.makeQueryEndpoint(),
 	})
 

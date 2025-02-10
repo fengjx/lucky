@@ -55,7 +55,7 @@ func RegisterMenuAdminTTPHandler(hs *luchen.HTTPServer) {
 		Name:     "MenuAdmin.Query",
 		Path:     "/admin/sys/menu/query",
 		ReqType:  reflect.TypeOf(&daox.QueryRecord{}),
-		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		RspType:  reflect.TypeOf(&types.AmisPageResp[*entity.SysMenu]{}),
 		Endpoint: e.makeQueryEndpoint(),
 	})
 

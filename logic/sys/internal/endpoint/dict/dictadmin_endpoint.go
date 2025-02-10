@@ -53,7 +53,7 @@ func RegisterDictAdminTTPHandler(hs *luchen.HTTPServer) {
 		Name:     "DictAdmin.Query",
 		Path:     "/admin/sys/dict/query",
 		ReqType:  reflect.TypeOf(&daox.QueryRecord{}),
-		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		RspType:  reflect.TypeOf(&types.AmisPageResp[*entity.SysDict]{}),
 		Endpoint: e.makeQueryEndpoint(),
 	})
 }

@@ -11,12 +11,12 @@ import (
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
-	"github.com/fengjx/lucky/common/kit"
 	"github.com/fengjx/lucky/common/types"
 	"github.com/fengjx/lucky/integration/db"
 	"github.com/fengjx/lucky/logic/sys/internal/dao"
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
 	"github.com/fengjx/lucky/logic/sys/internal/data/meta"
+	"github.com/fengjx/lucky/pkg/kit"
 )
 
 var UserBaseSvc = &userBaseService{}

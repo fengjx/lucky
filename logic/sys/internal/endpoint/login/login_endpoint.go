@@ -7,14 +7,15 @@ import (
 
 	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/luchen"
+
 	"github.com/fengjx/lucky/common/auth"
 	"github.com/fengjx/lucky/common/errno"
-	"github.com/fengjx/lucky/common/kit"
 	"github.com/fengjx/lucky/common/types"
 	"github.com/fengjx/lucky/current"
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
 	"github.com/fengjx/lucky/logic/sys/internal/protocol"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
+	"github.com/fengjx/lucky/pkg/kit"
 )
 
 func RegisterLoginTTPHandler(hs *luchen.HTTPServer) {

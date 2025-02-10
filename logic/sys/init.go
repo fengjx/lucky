@@ -7,11 +7,11 @@ import (
 	"github.com/fengjx/go-halo/halo"
 	"github.com/fengjx/luchen"
 
-	"github.com/fengjx/lucky/common/lifecycle"
 	"github.com/fengjx/lucky/logic/sys/internal/endpoint"
 	"github.com/fengjx/lucky/logic/sys/internal/provider"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
 	"github.com/fengjx/lucky/logic/sys/syspub"
+	"github.com/fengjx/lucky/pkg/lifecycle"
 )
 
 // Init 初始化

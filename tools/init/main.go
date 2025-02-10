@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
@@ -11,9 +9,8 @@ import (
 )
 
 func main() {
-	ctx := context.Background()
 	sys.InitWithTools()
-	err := syspub.AppAPI.Init(ctx)
+	err := syspub.AppAPI.Init()
 	if err != nil {
 		log.Error("install err", zap.Error(err))
 	}

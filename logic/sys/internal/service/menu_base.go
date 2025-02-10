@@ -11,7 +11,7 @@ import (
 	"github.com/samber/lo"
 	"go.uber.org/zap"
 
-	"github.com/fengjx/lucky/connom/types"
+	"github.com/fengjx/lucky/common/types"
 	"github.com/fengjx/lucky/integration/db"
 	"github.com/fengjx/lucky/logic/common"
 	"github.com/fengjx/lucky/logic/sys/internal/dao"

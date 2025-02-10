@@ -1,25 +1,67 @@
-package endpoint
+package dict
 
 import (
 	"context"
+	"reflect"
 	"strconv"
 
 	"github.com/fengjx/daox"
 	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/go-halo/utils"
 	"github.com/fengjx/luchen"
-
-	"github.com/fengjx/lucky/connom/types"
+	"github.com/fengjx/lucky/common/types"
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
 )
 
-var dictAdmin = sysDictAdminEndpoint{}
+// RegisterDictAdminTTPHandler 注册 HTTP 路由
+func RegisterDictAdminTTPHandler(hs *luchen.HTTPServer) {
+	e := &dictAdminEndpoint{}
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "DictAdmin.Add",
+		Path:     "/admin/sys/dict/add",
+		ReqType:  reflect.TypeOf(&entity.SysDict{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeAddEndpoint(),
+	})
 
-type sysDictAdminEndpoint struct {
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "DictAdmin.Update",
+		Path:     "/admin/sys/dict/update",
+		ReqType:  reflect.TypeOf(&entity.SysDict{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeUpdateEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "DictAdmin.Del",
+		Path:     "/admin/sys/dict/del",
+		ReqType:  reflect.TypeOf(&types.DelReq{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeDelEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "DictAdmin.BatchUpdate",
+		Path:     "/admin/sys/dict/batch-update",
+		ReqType:  reflect.TypeOf(&types.BatchUpdate{}),
+		RspType:  reflect.TypeOf(&types.AddRsp{}),
+		Endpoint: e.makeBatchUpdateEndpoint(),
+	})
+
+	hs.Handle(&luchen.EndpointDefine{
+		Name:     "DictAdmin.Query",
+		Path:     "/admin/sys/dict/query",
+		ReqType:  reflect.TypeOf(&daox.QueryRecord{}),
+		RspType:  reflect.TypeOf(&types.AmisPageResp[*entity.SysDict]{}),
+		Endpoint: e.makeQueryEndpoint(),
+	})
 }
 
-func (e sysDictAdminEndpoint) makeAddEndpoint() luchen.Endpoint {
+type dictAdminEndpoint struct {
+}
+
+func (e *dictAdminEndpoint) makeAddEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		param := request.(*entity.SysDict)
 		id, err := service.DictBaseSvc.Add(ctx, param)
@@ -33,7 +75,7 @@ func (e sysDictAdminEndpoint) makeAddEndpoint() luchen.Endpoint {
 	}
 }
 
-func (e sysDictAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
+func (e *dictAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		param := request.(*entity.SysDict)
 		ok, err := service.DictBaseSvc.Update(ctx, param)
@@ -47,7 +89,7 @@ func (e sysDictAdminEndpoint) makeUpdateEndpoint() luchen.Endpoint {
 	}
 }
 
-func (e sysDictAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
+func (e *dictAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		param := request.(*types.DelReq)
 		res := types.OKRsp{Success: true}
@@ -66,7 +108,7 @@ func (e sysDictAdminEndpoint) makeDelEndpoint() luchen.Endpoint {
 	}
 }
 
-func (e sysDictAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
+func (e *dictAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		param := request.(*types.BatchUpdate)
 		ok, err := service.DictBaseSvc.BatchUpdate(ctx, param)
@@ -80,7 +122,7 @@ func (e sysDictAdminEndpoint) makeBatchUpdateEndpoint() luchen.Endpoint {
 	}
 }
 
-func (e sysDictAdminEndpoint) makeQueryEndpoint() luchen.Endpoint {
+func (e *dictAdminEndpoint) makeQueryEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		query := request.(*daox.QueryRecord)
 		pageVO, err := service.DictBaseSvc.Query(ctx, query)

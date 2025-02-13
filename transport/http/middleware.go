@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/fengjx/luchen"
+
 	"github.com/fengjx/lucky/common/auth"
 	"github.com/fengjx/lucky/current"
 )
@@ -36,18 +37,21 @@ func adminMiddleware(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
-
-		l := log.GetLogger(r.Context())
+		ctx := r.Context()
+		l := log.GetLogger(ctx)
 		var uid int64
 		token := r.Header.Get(RequestHeaderAdminToken)
 		if len(token) > 0 {
 			payload, expiresAt, err := auth.Parse(token)
 			if err != nil {
 				l.Warn("parse token err", zap.String("token", token), zap.Error(err))
+				luchen.WriteError(ctx, w, luchen.ErrUnauthorized)
+				return
 			}
 			uid = payload.UID
 			if expiresAt > 0 && time.Unix(expiresAt, 0).Sub(time.Now()) < (time.Hour*24*6) {
 				refreshToken, _ := auth.GenToken(payload)
+				// 刷新 token
 				w.Header().Set(ResponseHeaderRefreshToken, refreshToken)
 			}
 		}

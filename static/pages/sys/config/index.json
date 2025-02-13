@@ -342,7 +342,7 @@
               "tooltip": "删除",
               "confirmText": "您确认要删除[${id}]?",
               "api": {
-                "method": "post",
+                "method": "DELETE",
                 "url": "${API_BASEURL}/admin/sys/config/del",
                 "data": {
                   "ids": "${id}"

@@ -6,11 +6,11 @@ import (
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/daox/sqlbuilder/ql"
-	"github.com/fengjx/go-halo/json"
+	"github.com/fengjx/go-halo/errs"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
-	"github.com/fengjx/lucky/connom/types"
+	"github.com/fengjx/lucky/common/types"
 	"github.com/fengjx/lucky/integration/db"
 	"github.com/fengjx/lucky/logic/cms/internal/dao"
 	"github.com/fengjx/lucky/logic/cms/internal/data/entity"
@@ -23,13 +23,12 @@ type newsBaseService struct {
 }
 
 // Query 分页查询
-func (svc newsBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[entity.CmsNews], error) {
+func (s *newsBaseService) Query(ctx context.Context, query *daox.QueryRecord) (*types.PageVO[entity.CmsNews], error) {
 	readDB := dao.CmsNewsDao.GetReadDB()
 	query.TableName = meta.CmsNewsMeta.TableName()
 	list, page, err := daox.Find[entity.CmsNews](ctx, readDB, *query)
 	if err != nil {
-		log.ErrorCtx(ctx, "page query cms_news err", zap.Any("query", json.ToJsonDelay(query)), zap.Error(err))
-		return nil, err
+		return nil, errs.Wrap(err, "page query cms_news err")
 	}
 	pageVO := &types.PageVO[entity.CmsNews]{
 		List:    list,
@@ -42,12 +41,12 @@ func (svc newsBaseService) Query(ctx context.Context, query *daox.QueryRecord) (
 }
 
 // Add 新增记录
-func (svc newsBaseService) Add(ctx context.Context, model *entity.CmsNews) (int64, error) {
+func (s *newsBaseService) Add(ctx context.Context, model *entity.CmsNews) (int64, error) {
 	return dao.CmsNewsDao.SaveContext(ctx, model)
 }
 
 // Update 更新记录
-func (svc newsBaseService) Update(ctx context.Context, model *entity.CmsNews) (bool, error) {
+func (s *newsBaseService) Update(ctx context.Context, model *entity.CmsNews) (bool, error) {
 	return dao.CmsNewsDao.UpdateContext(ctx, model,
 		meta.CmsNewsMeta.PrimaryKey(),
 		meta.CmsNewsMeta.Utime,
@@ -56,7 +55,7 @@ func (svc newsBaseService) Update(ctx context.Context, model *entity.CmsNews) (b
 }
 
 // BatchUpdate 批量更新
-func (svc newsBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
+func (s *newsBaseService) BatchUpdate(ctx context.Context, param *types.BatchUpdate) (bool, error) {
 	for _, row := range param.Rows {
 		var id any
 		attr := map[string]any{}
@@ -79,7 +78,7 @@ func (svc newsBaseService) BatchUpdate(ctx context.Context, param *types.BatchUp
 }
 
 // DeleteByIDs 批量更新
-func (svc newsBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
+func (s *newsBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 	l := log.GetLogger(ctx).With(zap.Any("ids", ids))
 	_, err := dao.CmsNewsDao.Deleter().Where(
 		ql.C(
@@ -87,7 +86,6 @@ func (svc newsBaseService) DeleteByIDs(ctx context.Context, ids []int64) error {
 		),
 	).ExecContext(ctx)
 	if err != nil {
-		l.Error("delete cms_news err", zap.Error(err))
 		return err
 	}
 	l.Info("delete cms_news success")

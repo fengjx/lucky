@@ -5,10 +5,12 @@ import (
 
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/sqlbuilder/ql"
+	"github.com/fengjx/go-halo/errs"
 
 	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
 	"github.com/fengjx/lucky/logic/sys/internal/data/enum"
 	"github.com/fengjx/lucky/logic/sys/internal/data/meta"
+	"github.com/fengjx/lucky/pkg/kit"
 )
 
 var SysConfigDao *sysConfigDao
@@ -28,13 +30,24 @@ func newSysConfigDao() *sysConfigDao {
 }
 
 // ListAll 查询所有生效配置
-func (dao sysConfigDao) ListAll(ctx context.Context) ([]*entity.SysConfig, error) {
+func (d *sysConfigDao) ListAll(ctx context.Context) ([]*entity.SysConfig, error) {
 	var list []*entity.SysConfig
-	err := dao.Selector().
+	err := d.Selector().
 		Where(ql.C(ql.Col(meta.SysUserMeta.Status).EQ(enum.ConfigStatusNormal))).
 		SelectContext(ctx, &list)
 	if err != nil {
 		return nil, err
+	}
+	return list, nil
+}
+
+// ListScopeConfig 查询指定作用域的配置
+func (d *sysConfigDao) ListScopeConfig(ctx context.Context, scopes []string) ([]*entity.SysConfig, error) {
+	m := meta.SysConfigMeta
+	var list []*entity.SysConfig
+	err := d.ListByColumnsContext(ctx, daox.OfMultiKv(m.Scope, kit.ToAnySlice(scopes)...), &list)
+	if err != nil {
+		return nil, errs.Wrap(err, "list all sys_config err")
 	}
 	return list, nil
 }

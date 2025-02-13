@@ -7,12 +7,12 @@ import (
 	"time"
 
 	"github.com/fengjx/luchen/env"
-	"github.com/fengjx/luchen/http/middleware"
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
-	"github.com/fengjx/lucky/connom/auth"
-	"github.com/fengjx/lucky/connom/errno"
+	"github.com/fengjx/luchen"
+
+	"github.com/fengjx/lucky/common/auth"
 	"github.com/fengjx/lucky/current"
 )
 
@@ -33,17 +33,25 @@ func commonMiddleware(next http.Handler) http.Handler {
 
 func adminMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		l := log.GetLogger(r.Context())
+		if !strings.HasPrefix(r.URL.Path, AdminAPI) {
+			next.ServeHTTP(w, r)
+			return
+		}
+		ctx := r.Context()
+		l := log.GetLogger(ctx)
 		var uid int64
 		token := r.Header.Get(RequestHeaderAdminToken)
 		if len(token) > 0 {
 			payload, expiresAt, err := auth.Parse(token)
 			if err != nil {
 				l.Warn("parse token err", zap.String("token", token), zap.Error(err))
+				luchen.WriteError(ctx, w, luchen.ErrUnauthorized)
+				return
 			}
 			uid = payload.UID
 			if expiresAt > 0 && time.Unix(expiresAt, 0).Sub(time.Now()) < (time.Hour*24*6) {
 				refreshToken, _ := auth.GenToken(payload)
+				// 刷新 token
 				w.Header().Set(ResponseHeaderRefreshToken, refreshToken)
 			}
 		}
@@ -58,8 +66,8 @@ func adminMiddleware(next http.Handler) http.Handler {
 			}
 		}
 		if uid > 0 {
-			ctx := log.WithLogger(r.Context(), zap.Int64("uid", uid))
-			ctx = current.WithUID(ctx, uid)
+			ctx := log.WithLogger(r.Context(), zap.Int64("admin_uid", uid))
+			ctx = current.WithAdminUID(ctx, uid)
 			r = r.WithContext(ctx)
 		}
 
@@ -68,17 +76,9 @@ func adminMiddleware(next http.Handler) http.Handler {
 			return
 		}
 		if uid == 0 {
-			l.Warn("request unauthorized", zap.String("path", r.URL.Path))
-			err := errno.UnauthorizedErr
-			WriteData(
-				r.Context(),
-				w,
-				err.HTTPCode,
-				&result{
-					Status: err.Code,
-					Msg:    err.Msg,
-				},
-			)
+			l.Warn("admin request unauthorized", zap.String("path", r.URL.Path))
+			errn := luchen.ErrBadRequest
+			luchen.WriteError(r.Context(), w, errn)
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -94,5 +94,3 @@ func isNoAuthPath(r *http.Request) bool {
 	}
 	return false
 }
-
-var GzipMiddleware = middleware.Compress(5, "gzip")

@@ -1,57 +1,57 @@
 package http
 
 import (
-	"net/http"
-	"sync"
-
+	"github.com/fengjx/go-halo/halo"
 	"github.com/fengjx/luchen"
-	"github.com/fengjx/luchen/http/middleware"
-	"github.com/fengjx/luchen/http/pprof"
-
-	"github.com/fengjx/lucky/connom/config"
+	"github.com/fengjx/lucky/common/config"
+	"github.com/fengjx/xin/middleware"
+	"github.com/fengjx/xin/pprof"
+	"net/http"
 )
 
-var (
-	server     *luchen.HTTPServer
-	serverOnce sync.Once
-)
+var serverSingle = halo.NewSingleton[luchen.HTTPServer](func() *luchen.HTTPServer {
+	serverConfig := config.GetConfig().Server.HTTP
+	hs := luchen.NewHTTPServer(
+		luchen.WithServiceName(serverConfig.ServerName),
+		luchen.WithServerAddr(serverConfig.Listen),
+	)
+	mux := hs.Mux()
+	mux.Use(
+		middleware.Recoverer,
+		middleware.RequestID,
+		middleware.RealIP,
+		middleware.CorsHandler(middleware.CorsOptions{
+			AllowedOrigins: serverConfig.Cors.AllowOrigins,
+			AllowedMethods: []string{
+				http.MethodHead,
+				http.MethodGet,
+				http.MethodPost,
+				http.MethodPut,
+				http.MethodPatch,
+				http.MethodDelete,
+			},
+			AllowedHeaders: []string{"*"},
+			ExposedHeaders: []string{
+				"Content-Disposition",
+				"Content-Type",
+				ResponseHeaderServer,
+				ResponseHeaderRefreshToken,
+				luchen.HeaderRspMeta,
+			},
+			AllowCredentials: true,
+		}),
+		commonMiddleware,
+		adminMiddleware,
+	)
+	// 开启 pprof，使用basic认证，用户名和密码为foo/bar
+	mux.Handle(pprof.DefaultPrefix, pprof.Profiler(map[string]string{
+		"fengjx": "hello1024",
+	}))
+	mux.Static("/static/", "static")
+
+	return hs
+})
 
 func GetServer() *luchen.HTTPServer {
-	serverOnce.Do(func() {
-		serverConfig := config.GetConfig().Server.HTTP
-		server = luchen.NewHTTPServer(
-			luchen.WithServiceName(serverConfig.ServerName),
-			luchen.WithServerAddr(serverConfig.Listen),
-		).Use(
-			middleware.Recoverer,
-			middleware.RequestID,
-			middleware.RealIP,
-			middleware.CorsHandler(middleware.CorsOptions{
-				AllowedOrigins: serverConfig.Cors.AllowOrigins,
-				AllowedMethods: []string{
-					http.MethodHead,
-					http.MethodGet,
-					http.MethodPost,
-					http.MethodPut,
-					http.MethodPatch,
-					http.MethodDelete,
-				},
-				AllowedHeaders: []string{"*"},
-				ExposedHeaders: []string{
-					"Content-Disposition",
-					"Content-Type",
-					ResponseHeaderServer,
-					ResponseHeaderRefreshToken,
-				},
-				AllowCredentials: true,
-			}),
-			commonMiddleware,
-			adminMiddleware,
-		).Handler(
-			pprof.NewHandler().BasicAuth(map[string]string{
-				"fengjx": "hello1024",
-			}),
-		).Static("/static/", "static")
-	})
-	return server
+	return serverSingle.Get()
 }

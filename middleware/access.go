@@ -12,8 +12,8 @@ import (
 var AccessMiddleware = luchen.AccessMiddleware(&luchen.AccessLogOpt{
 	MaxDay: 15,
 	ContextFields: map[string]luchen.GetValueFromContext{
-		"uid": func(ctx context.Context) any {
-			return current.UID(ctx)
+		"admin_uid": func(ctx context.Context) any {
+			return current.AdminUID(ctx)
 		},
 	},
 })

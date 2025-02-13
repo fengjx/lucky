@@ -3,11 +3,11 @@ package current
 import "context"
 
 type (
-	uidCtxKey struct{}
+	adminIDCtxKey struct{}
 )
 
-func UID(ctx context.Context) int64 {
-	val := ctx.Value(uidCtxKey{})
+func AdminUID(ctx context.Context) int64 {
+	val := ctx.Value(adminIDCtxKey{})
 	if val == nil {
 		return 0
 	}
@@ -17,6 +17,6 @@ func UID(ctx context.Context) int64 {
 	return 0
 }
 
-func WithUID(ctx context.Context, uid int64) context.Context {
-	return context.WithValue(ctx, uidCtxKey{}, uid)
+func WithAdminUID(ctx context.Context, uid int64) context.Context {
+	return context.WithValue(ctx, adminIDCtxKey{}, uid)
 }

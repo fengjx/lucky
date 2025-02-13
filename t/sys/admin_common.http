@@ -15,9 +15,9 @@ X-Debug-UID: {{DebugUID}}
 
 
 ### common query
-GET {{BaseURL}}/admin/common/query
+GET {{BaseURL}}/admin/sys/use
 Content-Type: application/json
-X-Debug-UID: {{DebugUID}}
+X-Admin-UID: {{AdminUID}}
 
 {
   "table_name": "sys_user",

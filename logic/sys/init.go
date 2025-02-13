@@ -4,39 +4,42 @@ import (
 	"context"
 	"time"
 
-	"github.com/fengjx/go-halo/hook"
+	"github.com/fengjx/go-halo/halo"
 	"github.com/fengjx/luchen"
-
-	"github.com/fengjx/lucky/connom/lifecycle"
 
 	"github.com/fengjx/lucky/logic/sys/internal/endpoint"
 	"github.com/fengjx/lucky/logic/sys/internal/provider"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
 	"github.com/fengjx/lucky/logic/sys/syspub"
+	"github.com/fengjx/lucky/pkg/lifecycle"
 )
 
 // Init 初始化
-func Init(ctx context.Context, httpServer *luchen.HTTPServer) {
+func Init(httpServer *luchen.HTTPServer) {
 	lifecycle.AddHook(lifecycle.InterfaceAware, func() {
 		syspub.SetDictAPI(provider.DictProvider)
 		syspub.SetConfigAPI(provider.ConfigProvider)
 		syspub.SetAppAPI(provider.AppProvider)
 	})
 	lifecycle.AddHook(lifecycle.InitData, func() {
-		service.ConfigSvc.Refresh(ctx)
-	}, hook.WithInterval(time.Minute))
+		halo.SetInterval(func() {
+			service.ConfigSvc.Refresh(context.Background())
+		}, time.Minute)
+	})
 
 	lifecycle.AddHook(lifecycle.InitData, func() {
-		service.DictSvc.Refresh(ctx)
-	}, hook.WithInterval(time.Minute))
+		halo.SetInterval(func() {
+			service.DictSvc.Refresh(context.Background())
+		}, time.Minute)
+	})
 
 	if httpServer != nil {
-		endpoint.Init(ctx, httpServer)
+		endpoint.Init(httpServer)
 	}
 }
 
 // InitWithTools 执行工具脚本时使用的初始化逻辑
-func InitWithTools(ctx context.Context) {
+func InitWithTools() {
 	syspub.SetDictAPI(provider.DictProvider)
 	syspub.SetConfigAPI(provider.ConfigProvider)
 	syspub.SetAppAPI(provider.AppProvider)

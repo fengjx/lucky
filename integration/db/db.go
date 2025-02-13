@@ -2,18 +2,19 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"strings"
 
 	"github.com/fengjx/daox"
 	"github.com/fengjx/daox/engine"
 	"github.com/fengjx/luchen/log"
+	"github.com/fengjx/lucky/common/config"
 	_ "github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/reflectx"
-
-	"github.com/fengjx/lucky/connom/config"
 )
 
 var (
@@ -70,7 +71,7 @@ func GetTxManager(name string) *daox.TxManager {
 }
 
 func printSQL(ctx context.Context, ec *engine.ExecutorContext, er *engine.ExecutorResult) {
-	if er.Err != nil {
+	if er.Err != nil && !errors.Is(er.Err, sql.ErrNoRows) {
 		log.ErrorCtx(ctx, "exec sql",
 			zap.String("sql", ec.SQL),
 			zap.Any("args", ec.Args),

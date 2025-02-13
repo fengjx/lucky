@@ -29,9 +29,9 @@ func newSysMenuDao() *sysMenuDao {
 }
 
 // ListChildren 查询所有子菜单
-func (dao sysMenuDao) ListChildren(ctx context.Context, status []enum.MenuStatus, parentIDs ...int64) (map[int64][]*entity.SysMenu, error) {
+func (d *sysMenuDao) ListChildren(ctx context.Context, status []enum.MenuStatus, parentIDs ...int64) (map[int64][]*entity.SysMenu, error) {
 	var list []*entity.SysMenu
-	err := dao.Selector().
+	err := d.Selector().
 		Where(
 			ql.C(
 				meta.SysMenuMeta.StatusIn(lo.Map[enum.MenuStatus, string](status, func(item enum.MenuStatus, index int) string {

@@ -6,12 +6,13 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/fengjx/daox"
-	"github.com/fengjx/daox/engine"
+	"github.com/fengjx/daox/v2"
+	"github.com/fengjx/daox/v2/engine"
 	"github.com/fengjx/luchen/log"
-	"github.com/fengjx/lucky/common/config"
 	_ "github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"
+
+	"github.com/fengjx/lucky/common/config"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/reflectx"
@@ -50,7 +51,7 @@ func init() {
 	daox.UseDefaultMasterDB(defaultDB)
 	// 默认忽略字段，这两个字段交给mysql自行处理，主要是为了一些问题排查提供依据，即使手动修改数据库也会触发字段更新
 	// 如果业务代码需要用到创建时间和更新时间，可以自行维护一个字段
-	daox.UseSaveOmits("ctime", "utime")
+	daox.UseOmits("ctime", "utime")
 	daox.PrintSQL(printSQL)
 }
 

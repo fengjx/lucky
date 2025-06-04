@@ -14,12 +14,15 @@ import (
 
 	"github.com/fengjx/lucky/common/auth"
 	"github.com/fengjx/lucky/current"
+	"github.com/fengjx/lucky/logic/admin"
 )
 
 var (
 	noAuthPaths = []string{
 		OpenAPI,
 		"/static",
+		"/dashboard",
+		"/admin",
 		"/debug/pprof",
 	}
 )
@@ -33,7 +36,7 @@ func commonMiddleware(next http.Handler) http.Handler {
 
 func adminMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !strings.HasPrefix(r.URL.Path, AdminAPI) {
+		if !strings.HasPrefix(r.URL.Path, admin.APIPrefix) {
 			next.ServeHTTP(w, r)
 			return
 		}

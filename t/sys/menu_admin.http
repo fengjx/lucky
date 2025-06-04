@@ -1,4 +1,12 @@
 
+### menu
 GET {{BaseURL}}/admin/sys/menu/fetch
 Content-Type: application/json
 X-Admin-UID: {{AdminUID}}
+
+
+### menus
+GET {{BaseURL}}/admin/menus
+Content-Type: application/json
+X-Admin-UID: {{AdminUID}}
+

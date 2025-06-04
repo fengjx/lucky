@@ -21,6 +21,7 @@ func newDictService() *dictService {
 	inst := &dictService{
 		dictMap: map[string][]*syspub.DictDTO{},
 	}
+	inst.Refresh(context.Background())
 	return inst
 }
 

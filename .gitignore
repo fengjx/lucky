@@ -26,3 +26,4 @@ ui
 logs
 conf/app-pre.yml
 conf/app-prod.yml
+node_modules

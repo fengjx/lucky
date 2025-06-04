@@ -1,25 +1,20 @@
 ds:
   type: mysql
-  dsn: root:1234@tcp(192.168.1.200:3306)/lca?charset=utf8mb4
+  dsn: root:123456@tcp(192.168.6.121:3306)/lucky?charset=utf8mb4
 target:
   custom:
     tag-name: json
-    out-dir: ./
-    use-admin: true
     gomod: github.com/fengjx/lucky
   tables:
     sys_user:
-      module: sys
       simple-name: user
+      target-dir: logic/sys/internal/dao
     sys_config:
-      module: sys
       simple-name: config
+      target-dir: logic/sys/internal/dao
     sys_dict:
-      module: sys
       simple-name: dict
-    sys_menu:
-      module: sys
-      simple-name: menu
+      target-dir: logic/sys/internal/dao
     cms_news:
-      module: cms
       simple-name: news
+      target-dir: logic/cms/internal/dao

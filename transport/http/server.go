@@ -1,12 +1,14 @@
 package http
 
 import (
+	"net/http"
+
 	"github.com/fengjx/go-halo/halo"
 	"github.com/fengjx/luchen"
-	"github.com/fengjx/lucky/common/config"
 	"github.com/fengjx/xin/middleware"
 	"github.com/fengjx/xin/pprof"
-	"net/http"
+
+	"github.com/fengjx/lucky/common/config"
 )
 
 var serverSingle = halo.NewSingleton[luchen.HTTPServer](func() *luchen.HTTPServer {
@@ -47,8 +49,7 @@ var serverSingle = halo.NewSingleton[luchen.HTTPServer](func() *luchen.HTTPServe
 	mux.Handle(pprof.DefaultPrefix, pprof.Profiler(map[string]string{
 		"fengjx": "hello1024",
 	}))
-	mux.Static("/static/", "static")
-
+	mux.Static("/dashboard/", "static/dashboard")
 	return hs
 })
 

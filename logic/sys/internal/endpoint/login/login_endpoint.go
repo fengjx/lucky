@@ -12,7 +12,7 @@ import (
 	"github.com/fengjx/lucky/common/errno"
 	"github.com/fengjx/lucky/common/types"
 	"github.com/fengjx/lucky/current"
-	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
+	"github.com/fengjx/lucky/logic/sys/internal/dao/schema"
 	"github.com/fengjx/lucky/logic/sys/internal/protocol"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
 	"github.com/fengjx/lucky/pkg/kit"
@@ -70,7 +70,7 @@ func (e *loginEndpoint) makeLoginEndpoint() luchen.Endpoint {
 func (e *loginEndpoint) makeUserInfoEndpoint() luchen.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		uid := current.AdminUID(ctx)
-		user, err := service.UserBaseSvc.Get(ctx, uid)
+		user, err := service.UserSvc.Get(ctx, uid)
 		if err != nil {
 			return nil, errs.Wrap(err, "get user_info err")
 		}
@@ -82,7 +82,7 @@ func (e *loginEndpoint) makeUserInfoEndpoint() luchen.Endpoint {
 }
 
 // checkPassword 检查密码是否匹配
-func checkPassword(user *entity.SysUser, password string) bool {
+func checkPassword(user *schema.SysUser, password string) bool {
 	sb := strings.Builder{}
 	sb.WriteString(password)
 	sb.WriteString(user.Salt)

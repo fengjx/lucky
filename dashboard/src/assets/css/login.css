@@ -1,0 +1,12 @@
+html,
+body,
+.app-wrapper {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.amis-scope .antd-Page-body {
+  padding: 0;
+}

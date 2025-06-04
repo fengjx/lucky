@@ -1,0 +1,20 @@
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #eaecef;
+}
+
+.settings-wrapper {
+  width: 768px;
+}
+
+.app-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+.amis-scope .antd-Tabs-pane {
+  padding: 15px 0;
+}

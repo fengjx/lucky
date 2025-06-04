@@ -21,6 +21,7 @@ func newConfigService() *configService {
 	inst := &configService{
 		configMap: make(map[string][]*syspub.ConfigDTO),
 	}
+	inst.Refresh(context.Background())
 	return inst
 }
 

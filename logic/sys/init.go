@@ -7,6 +7,7 @@ import (
 	"github.com/fengjx/go-halo/halo"
 	"github.com/fengjx/luchen"
 
+	"github.com/fengjx/lucky/logic/sys/internal/admin"
 	"github.com/fengjx/lucky/logic/sys/internal/endpoint"
 	"github.com/fengjx/lucky/logic/sys/internal/provider"
 	"github.com/fengjx/lucky/logic/sys/internal/service"
@@ -15,7 +16,9 @@ import (
 )
 
 // Init 初始化
-func Init(httpServer *luchen.HTTPServer) {
+func Init(hs *luchen.HTTPServer) {
+	admin.Init(hs)
+
 	lifecycle.AddHook(lifecycle.InterfaceAware, func() {
 		syspub.SetDictAPI(provider.DictProvider)
 		syspub.SetConfigAPI(provider.ConfigProvider)
@@ -33,8 +36,8 @@ func Init(httpServer *luchen.HTTPServer) {
 		}, time.Minute)
 	})
 
-	if httpServer != nil {
-		endpoint.Init(httpServer)
+	if hs != nil {
+		endpoint.Init(hs)
 	}
 }
 

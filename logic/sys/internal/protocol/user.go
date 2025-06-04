@@ -1,7 +1,7 @@
 package protocol
 
 import (
-	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
+	"github.com/fengjx/lucky/logic/sys/internal/dao/schema"
 )
 
 type UserInfo struct {
@@ -13,7 +13,7 @@ type UserInfo struct {
 	Phone    string `json:"phone,omitempty"`
 }
 
-func BuildUserInfo(e *entity.SysUser) *UserInfo {
+func BuildUserInfo(e *schema.SysUser) *UserInfo {
 	if e == nil {
 		return nil
 	}

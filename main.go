@@ -8,8 +8,8 @@ import (
 	"github.com/fengjx/luchen/log"
 	"go.uber.org/zap"
 
-	"github.com/fengjx/lucky/integration"
 	"github.com/fengjx/lucky/logic"
+	"github.com/fengjx/lucky/logic/admin"
 	"github.com/fengjx/lucky/middleware"
 	"github.com/fengjx/lucky/transport/http"
 )
@@ -20,10 +20,10 @@ func main() {
 		luchen.LogMiddleware,
 		middleware.AccessMiddleware,
 	)
-	httpServer := http.GetServer()
-	integration.Init()
-	logic.Init(httpServer)
-	luchen.Start(httpServer)
+	hs := http.GetServer()
+	hs.Mux().GroupHandler(admin.APIPrefix, admin.Router)
+	logic.Init(hs)
+	luchen.Start(hs)
 
 	if err := halo.Wait(time.Second * 30); err != nil {
 		log.Info("server shutdown err", zap.Error(err))

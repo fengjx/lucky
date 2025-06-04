@@ -1,11 +1,11 @@
 package dto
 
 import (
-	"github.com/fengjx/lucky/logic/sys/internal/data/entity"
+	"github.com/fengjx/lucky/logic/sys/internal/dao/schema"
 	"github.com/fengjx/lucky/logic/sys/syspub"
 )
 
-func BuildConfigDTO(e *entity.SysConfig) *syspub.ConfigDTO {
+func BuildConfigDTO(e *schema.SysConfig) *syspub.ConfigDTO {
 	if e == nil {
 		return nil
 	}
